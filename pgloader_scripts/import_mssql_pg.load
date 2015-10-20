@@ -1,0 +1,9 @@
+load database
+     from mssql://BCCruiser:BCetGFD456@CHELSQLGIS034/insurance
+     into postgresql://reconsandbox:recon123@recon-sand-box.cmguqnu4wehw.us-west-2.rds.amazonaws.com:5432/insurancepg
+
+ WITH include drop, create tables, no truncate, create indexes, reset sequences
+ SET maintenance_work_mem to '128MB', work_mem to '12MB', search_path to 'insurancepg'
+
+ CAST type datetime to timestamptz drop default drop not null using zero-dates-to-null,
+      type date drop not null drop default using zero-dates-to-null;

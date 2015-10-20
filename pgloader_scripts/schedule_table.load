@@ -1,0 +1,34 @@
+LOAD CSV 
+     FROM '~/ins_schedule.csv' WITH ENCODING UTF-8
+	      HAVING FIELDS 
+		  (
+		     scheduleid
+		    ,insurancevendorid
+			,schedulename
+			,axiscount
+			,schedulexml
+			,effectivedate   [date format 'YYYY-MM-DD HH24:MI:SS.US']
+			,terminationdate [date format 'YYYY-MM-DD HH24:MI:SS.US']
+			,createddate     [date format 'YYYY-MM-DD HH24:MI:SS.US']
+			,createdby
+			,lastupdateddate [date format 'YYYY-MM-DD HH24:MI:SS.US']
+			,lastupdatedby
+		  )
+	 INTO postgresql://reconsandbox:recon123@recon-sand-box.cmguqnu4wehw.us-west-2.rds.amazonaws.com:5432/insurancepoc?ins.schedule
+	      TARGET COLUMNS
+		  (
+		     scheduleid
+		    ,insurancevendorid
+			,schedulename
+			,axiscount
+			,schedulexml
+			,effectivedate   
+			,terminationdate 
+			,createddate     
+			,createdby
+			,lastupdateddate 
+			,lastupdatedby
+		  )
+	      WITH skip header =1 
+       	          ,fields terminated by ','
+         SET work_mem to '32 MB', maintenance_work_mem to '64 MB';

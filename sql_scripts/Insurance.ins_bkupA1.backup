@@ -1,0 +1,509 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.4.1
+-- Dumped by pg_dump version 9.4.4
+-- Started on 2015-09-17 15:57:07
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+SET SESSION AUTHORIZATION 'reconsandbox';
+
+--
+-- TOC entry 7 (class 2615 OID 25291)
+-- Name: ins; Type: SCHEMA; Schema: -; Owner: reconsandbox
+--
+
+CREATE SCHEMA ins;
+
+
+SET search_path = ins, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 174 (class 1259 OID 25294)
+-- Name: category; Type: TABLE; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE category (
+    categoryid integer NOT NULL,
+    categoryname character varying(100) NOT NULL,
+    categorydescription character varying(200),
+    isactive boolean NOT NULL,
+    createddate timestamp without time zone NOT NULL,
+    createdby integer NOT NULL,
+    lastupdateddate timestamp without time zone NOT NULL,
+    lastupdatedby integer NOT NULL
+);
+
+
+--
+-- TOC entry 173 (class 1259 OID 25292)
+-- Name: category_categoryid_seq; Type: SEQUENCE; Schema: ins; Owner: reconsandbox
+--
+
+CREATE SEQUENCE category_categoryid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 2927 (class 0 OID 0)
+-- Dependencies: 173
+-- Name: category_categoryid_seq; Type: SEQUENCE OWNED BY; Schema: ins; Owner: reconsandbox
+--
+
+ALTER SEQUENCE category_categoryid_seq OWNED BY category.categoryid;
+
+
+--
+-- TOC entry 176 (class 1259 OID 25302)
+-- Name: expression; Type: TABLE; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE expression (
+    expressionid integer NOT NULL,
+    internalexpressionname character varying(255) NOT NULL,
+    expressiondescription character varying(200),
+    expressionxml xml NOT NULL,
+    vendorid integer NOT NULL,
+    scheduleid integer,
+    isactive boolean NOT NULL,
+    createddate timestamp without time zone NOT NULL,
+    createdby integer NOT NULL,
+    lastupdateddate timestamp without time zone NOT NULL,
+    lastupdatedby integer NOT NULL
+);
+
+
+--
+-- TOC entry 175 (class 1259 OID 25300)
+-- Name: expression_expressionid_seq; Type: SEQUENCE; Schema: ins; Owner: reconsandbox
+--
+
+CREATE SEQUENCE expression_expressionid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 2928 (class 0 OID 0)
+-- Dependencies: 175
+-- Name: expression_expressionid_seq; Type: SEQUENCE OWNED BY; Schema: ins; Owner: reconsandbox
+--
+
+ALTER SEQUENCE expression_expressionid_seq OWNED BY expression.expressionid;
+
+
+--
+-- TOC entry 178 (class 1259 OID 25313)
+-- Name: insuranceproduct; Type: TABLE; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE insuranceproduct (
+    insuranceproductid integer NOT NULL,
+    insuranceid integer NOT NULL,
+    insurancevendorid integer NOT NULL,
+    categoryid integer NOT NULL,
+    templateid integer NOT NULL,
+    siteid integer NOT NULL,
+    lineofbusinessid smallint NOT NULL,
+    productname character varying(100) NOT NULL,
+    productdescription character varying(200),
+    isactive boolean NOT NULL,
+    createddate timestamp without time zone NOT NULL,
+    createdby integer NOT NULL,
+    lastupdateddate timestamp without time zone NOT NULL,
+    lastupdateby integer NOT NULL
+);
+
+
+--
+-- TOC entry 177 (class 1259 OID 25311)
+-- Name: insuranceproduct_insuranceproductid_seq; Type: SEQUENCE; Schema: ins; Owner: reconsandbox
+--
+
+CREATE SEQUENCE insuranceproduct_insuranceproductid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 2929 (class 0 OID 0)
+-- Dependencies: 177
+-- Name: insuranceproduct_insuranceproductid_seq; Type: SEQUENCE OWNED BY; Schema: ins; Owner: reconsandbox
+--
+
+ALTER SEQUENCE insuranceproduct_insuranceproductid_seq OWNED BY insuranceproduct.insuranceproductid;
+
+
+--
+-- TOC entry 180 (class 1259 OID 25322)
+-- Name: productexpression; Type: TABLE; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE productexpression (
+    productexpressionid integer NOT NULL,
+    expressionid integer NOT NULL,
+    insuranceproductid integer NOT NULL,
+    productexpressionname character varying(255) NOT NULL,
+    expressiontype smallint NOT NULL,
+    effectivedate date NOT NULL,
+    terminationdate date,
+    createddate timestamp without time zone NOT NULL,
+    createdby integer NOT NULL,
+    lastupdateddate timestamp without time zone NOT NULL,
+    lastupdatedby integer NOT NULL
+);
+
+
+--
+-- TOC entry 179 (class 1259 OID 25320)
+-- Name: productexpression_productexpressionid_seq; Type: SEQUENCE; Schema: ins; Owner: reconsandbox
+--
+
+CREATE SEQUENCE productexpression_productexpressionid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 2930 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: productexpression_productexpressionid_seq; Type: SEQUENCE OWNED BY; Schema: ins; Owner: reconsandbox
+--
+
+ALTER SEQUENCE productexpression_productexpressionid_seq OWNED BY productexpression.productexpressionid;
+
+
+--
+-- TOC entry 182 (class 1259 OID 25332)
+-- Name: schedule; Type: TABLE; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE schedule (
+    scheduleid integer NOT NULL,
+    insurancevendorid integer NOT NULL,
+    schedulename character varying(40) NOT NULL,
+    axiscount smallint NOT NULL,
+    schedulexml xml NOT NULL,
+    effectivedate timestamp without time zone NOT NULL,
+    terminationdate timestamp without time zone,
+    createddate timestamp without time zone NOT NULL,
+    createdby integer NOT NULL,
+    lastupdateddate timestamp without time zone NOT NULL,
+    lastupdatedby integer NOT NULL
+);
+
+
+--
+-- TOC entry 181 (class 1259 OID 25330)
+-- Name: schedule_scheduleid_seq; Type: SEQUENCE; Schema: ins; Owner: reconsandbox
+--
+
+CREATE SEQUENCE schedule_scheduleid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 2931 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: schedule_scheduleid_seq; Type: SEQUENCE OWNED BY; Schema: ins; Owner: reconsandbox
+--
+
+ALTER SEQUENCE schedule_scheduleid_seq OWNED BY schedule.scheduleid;
+
+
+--
+-- TOC entry 184 (class 1259 OID 25343)
+-- Name: template; Type: TABLE; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE template (
+    templateid integer NOT NULL,
+    templatename character varying(100) NOT NULL,
+    insurancevendorid integer NOT NULL,
+    viewreference character varying(200) NOT NULL,
+    isactive boolean NOT NULL,
+    createddate timestamp without time zone NOT NULL,
+    createdby integer NOT NULL,
+    lastupdateddate timestamp without time zone NOT NULL,
+    lastupdatedby integer NOT NULL
+);
+
+
+--
+-- TOC entry 183 (class 1259 OID 25341)
+-- Name: template_templateid_seq; Type: SEQUENCE; Schema: ins; Owner: reconsandbox
+--
+
+CREATE SEQUENCE template_templateid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 2932 (class 0 OID 0)
+-- Dependencies: 183
+-- Name: template_templateid_seq; Type: SEQUENCE OWNED BY; Schema: ins; Owner: reconsandbox
+--
+
+ALTER SEQUENCE template_templateid_seq OWNED BY template.templateid;
+
+
+--
+-- TOC entry 186 (class 1259 OID 25351)
+-- Name: vexpression; Type: TABLE; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE vexpression (
+    expressionid integer NOT NULL,
+    internalexpressionname character varying(255) NOT NULL,
+    vendorid integer NOT NULL,
+    scheduleid integer
+);
+
+
+--
+-- TOC entry 185 (class 1259 OID 25349)
+-- Name: vexpression_expressionid_seq; Type: SEQUENCE; Schema: ins; Owner: reconsandbox
+--
+
+CREATE SEQUENCE vexpression_expressionid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 2933 (class 0 OID 0)
+-- Dependencies: 185
+-- Name: vexpression_expressionid_seq; Type: SEQUENCE OWNED BY; Schema: ins; Owner: reconsandbox
+--
+
+ALTER SEQUENCE vexpression_expressionid_seq OWNED BY vexpression.expressionid;
+
+
+--
+-- TOC entry 2786 (class 2604 OID 25297)
+-- Name: categoryid; Type: DEFAULT; Schema: ins; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY category ALTER COLUMN categoryid SET DEFAULT nextval('category_categoryid_seq'::regclass);
+
+
+--
+-- TOC entry 2787 (class 2604 OID 25305)
+-- Name: expressionid; Type: DEFAULT; Schema: ins; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY expression ALTER COLUMN expressionid SET DEFAULT nextval('expression_expressionid_seq'::regclass);
+
+
+--
+-- TOC entry 2788 (class 2604 OID 25316)
+-- Name: insuranceproductid; Type: DEFAULT; Schema: ins; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY insuranceproduct ALTER COLUMN insuranceproductid SET DEFAULT nextval('insuranceproduct_insuranceproductid_seq'::regclass);
+
+
+--
+-- TOC entry 2789 (class 2604 OID 25325)
+-- Name: productexpressionid; Type: DEFAULT; Schema: ins; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY productexpression ALTER COLUMN productexpressionid SET DEFAULT nextval('productexpression_productexpressionid_seq'::regclass);
+
+
+--
+-- TOC entry 2790 (class 2604 OID 25335)
+-- Name: scheduleid; Type: DEFAULT; Schema: ins; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY schedule ALTER COLUMN scheduleid SET DEFAULT nextval('schedule_scheduleid_seq'::regclass);
+
+
+--
+-- TOC entry 2791 (class 2604 OID 25346)
+-- Name: templateid; Type: DEFAULT; Schema: ins; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY template ALTER COLUMN templateid SET DEFAULT nextval('template_templateid_seq'::regclass);
+
+
+--
+-- TOC entry 2792 (class 2604 OID 25354)
+-- Name: expressionid; Type: DEFAULT; Schema: ins; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY vexpression ALTER COLUMN expressionid SET DEFAULT nextval('vexpression_expressionid_seq'::regclass);
+
+
+--
+-- TOC entry 2794 (class 2606 OID 25299)
+-- Name: category_pk; Type: CONSTRAINT; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY category
+    ADD CONSTRAINT category_pk PRIMARY KEY (categoryid);
+
+
+--
+-- TOC entry 2796 (class 2606 OID 25310)
+-- Name: expression_pk; Type: CONSTRAINT; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY expression
+    ADD CONSTRAINT expression_pk PRIMARY KEY (expressionid);
+
+
+--
+-- TOC entry 2799 (class 2606 OID 25318)
+-- Name: insuranceproduct_pk; Type: CONSTRAINT; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY insuranceproduct
+    ADD CONSTRAINT insuranceproduct_pk PRIMARY KEY (insuranceproductid);
+
+
+--
+-- TOC entry 2803 (class 2606 OID 25327)
+-- Name: productexpression_pk; Type: CONSTRAINT; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY productexpression
+    ADD CONSTRAINT productexpression_pk PRIMARY KEY (productexpressionid);
+
+
+--
+-- TOC entry 2805 (class 2606 OID 25340)
+-- Name: schedule_pk; Type: CONSTRAINT; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY schedule
+    ADD CONSTRAINT schedule_pk PRIMARY KEY (scheduleid);
+
+
+--
+-- TOC entry 2807 (class 2606 OID 25348)
+-- Name: template_pk; Type: CONSTRAINT; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY template
+    ADD CONSTRAINT template_pk PRIMARY KEY (templateid);
+
+
+--
+-- TOC entry 2797 (class 1259 OID 25319)
+-- Name: akinsuranceproduct_insuranceid; Type: INDEX; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE UNIQUE INDEX akinsuranceproduct_insuranceid ON insuranceproduct USING btree (insuranceid, siteid);
+
+
+--
+-- TOC entry 2800 (class 1259 OID 25328)
+-- Name: ix_productexpression_expressionidproductid; Type: INDEX; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX ix_productexpression_expressionidproductid ON productexpression USING btree (expressionid, insuranceproductid);
+
+
+--
+-- TOC entry 2801 (class 1259 OID 25329)
+-- Name: ix_productexpression_productidexpressionid; Type: INDEX; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX ix_productexpression_productidexpressionid ON productexpression USING btree (insuranceproductid, expressionid);
+
+
+--
+-- TOC entry 2808 (class 1259 OID 25355)
+-- Name: ucivexpression; Type: INDEX; Schema: ins; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE UNIQUE INDEX ucivexpression ON vexpression USING btree (internalexpressionname, vendorid);
+
+
+--
+-- TOC entry 2809 (class 2606 OID 25356)
+-- Name: expression_schedule_fk1; Type: FK CONSTRAINT; Schema: ins; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY expression
+    ADD CONSTRAINT expression_schedule_fk1 FOREIGN KEY (scheduleid) REFERENCES schedule(scheduleid);
+
+
+--
+-- TOC entry 2810 (class 2606 OID 25361)
+-- Name: insuranceproduct_category_fk1; Type: FK CONSTRAINT; Schema: ins; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY insuranceproduct
+    ADD CONSTRAINT insuranceproduct_category_fk1 FOREIGN KEY (categoryid) REFERENCES category(categoryid);
+
+
+--
+-- TOC entry 2811 (class 2606 OID 25366)
+-- Name: insuranceproduct_template_fk1; Type: FK CONSTRAINT; Schema: ins; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY insuranceproduct
+    ADD CONSTRAINT insuranceproduct_template_fk1 FOREIGN KEY (templateid) REFERENCES template(templateid);
+
+
+--
+-- TOC entry 2812 (class 2606 OID 25371)
+-- Name: productexpression_expression_fk1; Type: FK CONSTRAINT; Schema: ins; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY productexpression
+    ADD CONSTRAINT productexpression_expression_fk1 FOREIGN KEY (expressionid) REFERENCES expression(expressionid);
+
+
+--
+-- TOC entry 2813 (class 2606 OID 25376)
+-- Name: productexpression_insuranceproduct_fk1; Type: FK CONSTRAINT; Schema: ins; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY productexpression
+    ADD CONSTRAINT productexpression_insuranceproduct_fk1 FOREIGN KEY (insuranceproductid) REFERENCES insuranceproduct(insuranceproductid);
+
+
+-- Completed on 2015-09-17 15:57:38
+
+--
+-- PostgreSQL database dump complete
+--
+

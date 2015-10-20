@@ -1,0 +1,2968 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.4.1
+-- Dumped by pg_dump version 9.4.4
+-- Started on 2015-09-17 14:22:03
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+SET SESSION AUTHORIZATION 'reconsandbox';
+
+--
+-- TOC entry 7 (class 2615 OID 24586)
+-- Name: dbo; Type: SCHEMA; Schema: -; Owner: reconsandbox
+--
+
+CREATE SCHEMA dbo;
+
+
+SET search_path = dbo, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 173 (class 1259 OID 24587)
+-- Name: __airbookingservicefeecharged; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE __airbookingservicefeecharged (
+    bookingid integer NOT NULL,
+    bookingitemid integer NOT NULL
+);
+
+
+--
+-- TOC entry 175 (class 1259 OID 24594)
+-- Name: booking; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE booking (
+    bookingid integer NOT NULL,
+    travelproductid integer NOT NULL,
+    trl integer NOT NULL,
+    tuid integer NOT NULL,
+    travelpackagetypeid smallint NOT NULL,
+    bookingenddate timestamp without time zone NOT NULL,
+    wizardid smallint NOT NULL,
+    marketingprogramid smallint NOT NULL,
+    partnerid integer NOT NULL,
+    referraltrackingserviceid smallint NOT NULL,
+    referraltrackingnbr character varying(255),
+    abtestgroupid smallint NOT NULL,
+    itinerarypurposemask integer NOT NULL,
+    groupaccountid integer,
+    bookingdesc character varying(255) NOT NULL,
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL,
+    updatedate timestamp without time zone,
+    updatetuid integer NOT NULL,
+    langid smallint,
+    groupaccountdepartmentid integer,
+    agentassistedbool smallint NOT NULL,
+    affiliateid integer,
+    operatingunitid integer
+);
+
+
+--
+-- TOC entry 174 (class 1259 OID 24592)
+-- Name: booking_bookingid_seq; Type: SEQUENCE; Schema: dbo; Owner: reconsandbox
+--
+
+CREATE SEQUENCE booking_bookingid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 3351 (class 0 OID 0)
+-- Dependencies: 174
+-- Name: booking_bookingid_seq; Type: SEQUENCE OWNED BY; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER SEQUENCE booking_bookingid_seq OWNED BY booking.bookingid;
+
+
+--
+-- TOC entry 176 (class 1259 OID 24607)
+-- Name: bookingaffiliatesource; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingaffiliatesource (
+    bookingid integer NOT NULL,
+    shopperid character varying(255) NOT NULL,
+    linkid character varying(255) NOT NULL,
+    publisherwebsiteid character varying(255),
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL,
+    updatedate timestamp without time zone NOT NULL,
+    updatetuid integer NOT NULL
+);
+
+
+--
+-- TOC entry 177 (class 1259 OID 24615)
+-- Name: bookingamount; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingamount (
+    bookingid integer NOT NULL,
+    bookingamountseqnbr smallint NOT NULL,
+    bookingamountlevelid smallint NOT NULL,
+    bookingitemid integer,
+    bookingiteminventoryseqnbr smallint,
+    bookingitemtypeid smallint,
+    monetaryclassid smallint NOT NULL,
+    monetarycalculationsystemid smallint NOT NULL,
+    monetarycalculationid integer NOT NULL,
+    currencycodecost character(3) NOT NULL,
+    transactionamtcost double precision NOT NULL,
+    bookingamountrefcodecost character varying(60) NOT NULL,
+    bookingamountdesccost character varying(255) NOT NULL,
+    currencycodeprice character(3) NOT NULL,
+    transactionamtprice double precision NOT NULL,
+    bookingamountrefcodeprice character varying(60) NOT NULL,
+    bookingamountdescprice character varying(255) NOT NULL,
+    cancelbool boolean NOT NULL,
+    createdate timestamp without time zone,
+    createtuid integer NOT NULL,
+    bookingamountrowguid character varying(36),
+    orderoperationcorrelationid character varying(36),
+    primarymodificationreasonid smallint,
+    secondarymodificationreasonid smallint
+);
+
+
+--
+-- TOC entry 178 (class 1259 OID 24625)
+-- Name: bookingattributeextension; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingattributeextension (
+    bookingid integer NOT NULL,
+    bookingattributeextseqnbr smallint NOT NULL,
+    bookingitemid integer,
+    bookingtravelerseqnbr smallint,
+    domaintypeidnamespaceid integer NOT NULL,
+    bookingattributeextname character varying(100) NOT NULL,
+    bookingattributeextvalue character varying(500) NOT NULL,
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL,
+    updatedate timestamp without time zone,
+    updatetuid integer NOT NULL
+);
+
+
+--
+-- TOC entry 179 (class 1259 OID 24635)
+-- Name: bookingauditevent; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingauditevent (
+    bookingauditeventid smallint NOT NULL,
+    bookingauditeventversionnbr smallint NOT NULL,
+    bookingauditeventname character varying(60) NOT NULL,
+    bookingauditeventdesc character varying(255) NOT NULL,
+    auditobjectkeyfmt character varying(255),
+    auditdescfmt character varying(1000),
+    statuscode character(1) NOT NULL,
+    updatedate timestamp without time zone NOT NULL,
+    lastupdatedby character varying(32) NOT NULL
+);
+
+
+--
+-- TOC entry 180 (class 1259 OID 24644)
+-- Name: bookingauditlog; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingauditlog (
+    bookingauditeventid smallint NOT NULL,
+    bookingauditeventversionnbr smallint NOT NULL,
+    auditactionid smallint NOT NULL,
+    travelproductid integer NOT NULL,
+    bookingid integer NOT NULL,
+    bookingitemid integer,
+    sequencenbr integer,
+    auditobjectkeyvalue character varying(255) NOT NULL,
+    auditdesc character varying(2000) NOT NULL,
+    transactionguid bytea NOT NULL,
+    audittravelproductid integer NOT NULL,
+    audittuid integer NOT NULL,
+    auditdate timestamp without time zone NOT NULL
+);
+
+
+--
+-- TOC entry 182 (class 1259 OID 24654)
+-- Name: bookingitem; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitem (
+    bookingitemid integer NOT NULL,
+    bookingid integer NOT NULL,
+    bookingitemidoriginal integer,
+    bookingitemidprior integer,
+    bookingitemtypeid smallint NOT NULL,
+    bookingitemstateid smallint NOT NULL,
+    bookingitemstateidpending smallint NOT NULL,
+    bookingfulfillmentmethodid smallint NOT NULL,
+    bookingfulfillmentstateid smallint NOT NULL,
+    bookingfulfillmentdate timestamp without time zone,
+    usedatebegin timestamp without time zone NOT NULL,
+    usedateend timestamp without time zone NOT NULL,
+    bookingrecordsystemid smallint NOT NULL,
+    bookingrecordsystemreferencecode character varying(35) NOT NULL,
+    accountingvendorid integer NOT NULL,
+    supplierbookingconfirmationcode character varying(50) NOT NULL,
+    supplierbookingconfirmationdate timestamp without time zone,
+    suppliercancelconfirmationcode character varying(50) NOT NULL,
+    suppliercancelconfirmationdate timestamp without time zone,
+    bookingitemdesc character varying(255) NOT NULL,
+    canceldate timestamp without time zone,
+    canceltuid integer,
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL,
+    updatedate timestamp without time zone,
+    updatetravelproductid integer NOT NULL,
+    updatetuid integer NOT NULL,
+    crsreconstructdate timestamp without time zone,
+    domaintypeidskudomain integer,
+    skuid integer,
+    bookingfulfillmentdatescheduled timestamp without time zone,
+    revenuereportingtypeid smallint,
+    reservedate timestamp without time zone,
+    reservetuid integer,
+    bookdate timestamp without time zone,
+    booktuid integer,
+    distributorbookingitemreferencecode character varying(50),
+    reserveenddate timestamp without time zone,
+    canceltype character varying(255),
+    cancelreason character varying(255)
+);
+
+
+--
+-- TOC entry 181 (class 1259 OID 24652)
+-- Name: bookingitem_bookingitemid_seq; Type: SEQUENCE; Schema: dbo; Owner: reconsandbox
+--
+
+CREATE SEQUENCE bookingitem_bookingitemid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 3352 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: bookingitem_bookingitemid_seq; Type: SEQUENCE OWNED BY; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER SEQUENCE bookingitem_bookingitemid_seq OWNED BY bookingitem.bookingitemid;
+
+
+--
+-- TOC entry 183 (class 1259 OID 24671)
+-- Name: bookingitemair; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemair (
+    bookingitemid integer NOT NULL,
+    bookingitineraryairid integer NOT NULL,
+    airagenttypeid smallint NOT NULL,
+    airagentcode character varying(15),
+    airlinecodeticketing character(3) NOT NULL,
+    electronicpseudocitycode character varying(15) NOT NULL,
+    aircustomerreferencenbr character varying(30) NOT NULL,
+    ticketexpirationdate timestamp without time zone,
+    aircabintypeid smallint NOT NULL,
+    personagetypeid smallint NOT NULL,
+    infantinlapcnt smallint NOT NULL,
+    transferablebool boolean,
+    dealtourcode character varying(30) NOT NULL,
+    airpricingauthorityid smallint NOT NULL,
+    airpricingcommandtxt character varying(100) NOT NULL,
+    directconnectexemptiontypemask integer NOT NULL,
+    paperticketreasonmask integer NOT NULL,
+    bookingitemairtransactionstateid smallint,
+    bookingitemairtransactionstateidpending smallint,
+    airticketendorsementtxt character varying(58),
+    airlineticketingcontractcode character varying(15),
+    airpricingmarkupreferenceprice double precision,
+    airpricingmarkupreferenceairlinecode character(3),
+    airpricingmarkupreferencetypeid smallint
+);
+
+
+--
+-- TOC entry 184 (class 1259 OID 24677)
+-- Name: bookingitemairinventory; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemairinventory (
+    bookingitemid integer NOT NULL,
+    bookingiteminventoryseqnbr smallint NOT NULL,
+    bookingiteminventoryseqnbrpricing smallint,
+    origdestseqnbr smallint NOT NULL,
+    airsegmentconfirmationstateid smallint NOT NULL,
+    airsegmentusestateid smallint NOT NULL,
+    airticketnbr character varying(20),
+    airportcodefrom character(3) NOT NULL,
+    airportcodeto character(3) NOT NULL,
+    airlinecodemarketing character(3) NOT NULL,
+    airlinecodeoperating character(3),
+    flightnumber smallint,
+    traveldatebegin timestamp without time zone,
+    traveldateend timestamp without time zone,
+    aircabintypeid smallint NOT NULL,
+    aircabintypeidpricing smallint NOT NULL,
+    airpassengertypecode character(3) NOT NULL,
+    airbookingclasscode character(2) NOT NULL,
+    airfarebasiscode character varying(15) NOT NULL,
+    airticketdesignatorcode character varying(15) NOT NULL,
+    airinventoryskuid integer,
+    negotiateddiscountrefnbr character varying(50) NOT NULL,
+    stopcnt smallint,
+    refundablebool boolean,
+    currencycodeexchangefee character(3),
+    exchangefeeamt double precision
+);
+
+
+--
+-- TOC entry 185 (class 1259 OID 24683)
+-- Name: bookingitembookingtraveler; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitembookingtraveler (
+    bookingid integer NOT NULL,
+    bookingtravelerseqnbr smallint NOT NULL,
+    bookingitemid integer NOT NULL,
+    primarytravelerbool smallint NOT NULL,
+    bookingitembookingtravelerlogid integer,
+    createdate timestamp without time zone,
+    createtuid integer NOT NULL
+);
+
+
+--
+-- TOC entry 187 (class 1259 OID 24693)
+-- Name: bookingitembookingtravelerlog; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitembookingtravelerlog (
+    bookingitembookingtravelerlogid integer NOT NULL,
+    bookingid integer NOT NULL,
+    bookingitemid integer NOT NULL,
+    bookingtravelerseqnbr smallint NOT NULL,
+    primarytravelerbool boolean NOT NULL,
+    bookingitembookingtravelerlogidprior integer,
+    createdateoriginal timestamp without time zone NOT NULL,
+    createtuidoriginal integer NOT NULL,
+    createdate timestamp without time zone NOT NULL
+);
+
+
+--
+-- TOC entry 186 (class 1259 OID 24691)
+-- Name: bookingitembookingtravelerlog_bookingitembookingtravelerlog_seq; Type: SEQUENCE; Schema: dbo; Owner: reconsandbox
+--
+
+CREATE SEQUENCE bookingitembookingtravelerlog_bookingitembookingtravelerlog_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 3353 (class 0 OID 0)
+-- Dependencies: 186
+-- Name: bookingitembookingtravelerlog_bookingitembookingtravelerlog_seq; Type: SEQUENCE OWNED BY; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER SEQUENCE bookingitembookingtravelerlog_bookingitembookingtravelerlog_seq OWNED BY bookingitembookingtravelerlog.bookingitembookingtravelerlogid;
+
+
+--
+-- TOC entry 188 (class 1259 OID 24702)
+-- Name: bookingitemcar; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemcar (
+    bookingitemid integer NOT NULL,
+    carvendorcode character(2) NOT NULL,
+    airportcodepickup character(3) NOT NULL,
+    airportcodedropoff character(3),
+    carvendorlocationcodepickup character(4) NOT NULL,
+    carvendorlocationcodedropoff character(4),
+    carcategoryid smallint NOT NULL,
+    cartypeid smallint NOT NULL,
+    cartransmissiondriveid smallint NOT NULL,
+    carfuelairconditionid smallint NOT NULL,
+    searchtypeidpickup smallint,
+    resulttypeidpickup smallint,
+    flightnumberarrival smallint,
+    airlinecodearrival character(3),
+    carbusinessmodelid integer NOT NULL,
+    caritemid integer NOT NULL,
+    supplysubsetid integer NOT NULL,
+    carcorpdiscountcodecrsreq character varying(19),
+    carcorpdiscountcodecrsresp character varying(19),
+    carratecodecrsreq character varying(6),
+    carratecodecrsresp character varying(6),
+    carclubnbrcrsreq character varying(16),
+    carclubnbrcrsresp character varying(16),
+    carcouponcodecrsreq character varying(20),
+    carcouponcodecrsresp character varying(20),
+    carsupplementalcodecrsreq character varying(90),
+    carsupplementalcodecrsresp character varying(90),
+    exchangeratecurrencycode character(3),
+    exchangerate numeric(20,10),
+    estimatedtotaltaxandfeeamt double precision,
+    estimatedtotaltaxandfeeamtcurrencycode character(3),
+    carspecialequipmentmask integer,
+    carinsuranceandwaivermask integer,
+    frequentflyerplanname character varying(60),
+    frequentflyerplannumber character varying(16),
+    carcorpdiscountcodetraveler character varying(19),
+    carratecodetraveler character varying(6),
+    carclubnbrtraveler character varying(16),
+    carcouponcodetraveler character varying(20),
+    carsupplementalcodetraveler character varying(90),
+    carrateoptiontypeidtraveler smallint,
+    reservationguaranteemethodid smallint,
+    creditcardtypeid smallint,
+    creditcardlastfourdigitnbr character(4),
+    unlimitedmileagebool boolean,
+    mileagechargeamt double precision,
+    mileagechargeamtcurrencycode character(3),
+    mileageunitinkmbool boolean,
+    carvouchernbr character varying(32),
+    caragreementid integer,
+    carvendoragreementnbr character varying(30),
+    carrentaldayscnt smallint,
+    publishedpriceamt double precision,
+    carbasepriceperiodpublishedid smallint,
+    currencycodepublishedprice character(3),
+    marginmaxamt double precision,
+    marginmaxcurrencycode character(3),
+    marginminamt double precision,
+    marginmincurrencycode character(3),
+    markuppct numeric(5,4)
+);
+
+
+--
+-- TOC entry 189 (class 1259 OID 24710)
+-- Name: bookingitemcaragency; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemcaragency (
+    bookingitemid integer NOT NULL,
+    carvendorcode character(2) NOT NULL,
+    airportcodepickup character(3) NOT NULL,
+    carvendorlocationcodepickup character(4) NOT NULL,
+    carcategoryid smallint NOT NULL,
+    cartypeid smallint NOT NULL,
+    cartransmissiondriveid smallint NOT NULL,
+    carfuelairconditionid smallint NOT NULL,
+    estimatedtotaltaxandfeeamt double precision NOT NULL,
+    estimatedtotaltaxandfeeamtcurrencycode character(3) NOT NULL,
+    searchtypeidpickup smallint NOT NULL,
+    resulttypeidpickup smallint NOT NULL,
+    carspecialequipmentmask integer NOT NULL,
+    carinsuranceandwaivermask integer NOT NULL,
+    frequentflyerplanname character varying(60) NOT NULL,
+    frequentflyerplannumber character varying(16) NOT NULL,
+    carcorpdiscountcodetraveler character varying(19) NOT NULL,
+    carratecodetraveler character varying(6) NOT NULL,
+    carclubnbrtraveler character varying(16) NOT NULL,
+    carcouponcodetraveler character varying(20) NOT NULL,
+    carsupplementalcodetraveler character varying(90) NOT NULL,
+    carrateoptiontypeidtraveler smallint NOT NULL,
+    carratecodecrsreq character varying(6) NOT NULL,
+    carclubnbrcrsreq character varying(16) NOT NULL,
+    carcorpdiscountcodecrsreq character varying(19) NOT NULL,
+    carcouponcodecrsreq character varying(20) NOT NULL,
+    carsupplementalcodecrsreq character varying(90) NOT NULL,
+    carratecodecrsresp character varying(6) NOT NULL,
+    carclubnbrcrsresp character varying(16) NOT NULL,
+    carcorpdiscountcodecrsresp character varying(19) NOT NULL,
+    carcouponcodecrsresp character varying(20) NOT NULL,
+    carsupplementalcodecrsresp character varying(90) NOT NULL,
+    reservationguaranteemethodid smallint NOT NULL,
+    creditcardtypeid smallint,
+    creditcardlastfourdigitnbr character(4),
+    unlimitedmileagebool boolean NOT NULL,
+    mileagechargeamt double precision,
+    mileagechargeamtcurrencycode character(3),
+    mileageunitinkmbool boolean,
+    flightnumberarrival smallint,
+    airlinecodearrival character(3),
+    airportcodedropoff character(3),
+    carvendorlocationcodedropoff character(4),
+    caritemid integer,
+    supplysubsetid integer
+);
+
+
+--
+-- TOC entry 190 (class 1259 OID 24718)
+-- Name: bookingitemcarinventory; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemcarinventory (
+    bookingitemid integer NOT NULL,
+    bookingiteminventoryseqnbr smallint NOT NULL,
+    startdate timestamp without time zone NOT NULL,
+    enddate timestamp without time zone NOT NULL,
+    carinternalbasepriceperiodid smallint NOT NULL,
+    baseamtcost double precision NOT NULL,
+    peaksurchargeamtcost double precision NOT NULL
+);
+
+
+--
+-- TOC entry 191 (class 1259 OID 24723)
+-- Name: bookingitemcarmerchant; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemcarmerchant (
+    bookingitemid integer NOT NULL,
+    carvendorcode character(2) NOT NULL,
+    airportcode character(3) NOT NULL,
+    carvendorlocationcode character(4) NOT NULL,
+    carcategoryid smallint NOT NULL,
+    cartypeid smallint NOT NULL,
+    cartransmissiondriveid smallint NOT NULL,
+    carfuelairconditionid smallint NOT NULL,
+    carvouchernbr character varying(32) NOT NULL,
+    caragreementid integer NOT NULL,
+    carcorpdiscountcode character varying(16) NOT NULL,
+    carvendoragreementnbr character varying(30) NOT NULL,
+    carrentaldayscnt smallint NOT NULL,
+    publishedpriceamt double precision NOT NULL,
+    carbasepriceperiodpublishedid smallint NOT NULL,
+    currencycodepublishedprice character(3) NOT NULL,
+    flightnumberarrival smallint,
+    airlinecodearrival character(3),
+    searchtypeidpickup smallint,
+    resulttypeidpickup smallint,
+    marginmaxamt double precision,
+    marginmaxcurrencycode character(3),
+    marginminamt double precision,
+    marginmincurrencycode character(3),
+    caritemid integer,
+    supplysubsetid integer
+);
+
+
+--
+-- TOC entry 192 (class 1259 OID 24728)
+-- Name: bookingitemcarmerchantcancelpenalty; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemcarmerchantcancelpenalty (
+    bookingitemid integer NOT NULL,
+    cancelpenaltyhourcnt smallint NOT NULL,
+    cancelpenaltyrulelogid integer NOT NULL,
+    cancelpenaltyamtcost double precision NOT NULL,
+    currencycodecost character(3) NOT NULL,
+    cancelpenaltyamtprice double precision NOT NULL,
+    currencycodeprice character(3) NOT NULL
+);
+
+
+--
+-- TOC entry 193 (class 1259 OID 24733)
+-- Name: bookingitemcarmerchantinventory; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemcarmerchantinventory (
+    bookingitemid integer NOT NULL,
+    bookingiteminventoryseqnbr smallint NOT NULL,
+    startdate timestamp without time zone NOT NULL,
+    enddate timestamp without time zone NOT NULL,
+    carinternalbasepriceperiodid smallint NOT NULL,
+    baseamtcost double precision NOT NULL,
+    peaksurchargeamtcost double precision NOT NULL
+);
+
+
+--
+-- TOC entry 194 (class 1259 OID 24738)
+-- Name: bookingitemcorporate; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemcorporate (
+    bookingitemid integer NOT NULL,
+    policystatusid smallint NOT NULL,
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL
+);
+
+
+--
+-- TOC entry 195 (class 1259 OID 24743)
+-- Name: bookingitemcruise; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemcruise (
+    bookingitemid integer NOT NULL,
+    cruiselineid integer NOT NULL,
+    cruiseapiid smallint NOT NULL,
+    cruiseconnectionid smallint NOT NULL,
+    importcruiseapiid smallint,
+    importcruiseconnectionid smallint,
+    shipid integer NOT NULL,
+    sailingid integer NOT NULL,
+    sailinglogid integer NOT NULL,
+    sailingstartdate timestamp without time zone NOT NULL,
+    sailingenddate timestamp without time zone NOT NULL,
+    shipcabincategoryid integer NOT NULL,
+    shipcabincategoryidupgrade integer NOT NULL,
+    sailinginventorybool boolean NOT NULL,
+    cruiselinecancelpolicylogid integer NOT NULL,
+    cruiselinerateoptioncitycode character(3) NOT NULL,
+    cruiselinerateoptioncode character varying(32) NOT NULL,
+    cruiselinerateoptionid integer NOT NULL,
+    shipcabinunitnbr character varying(32) NOT NULL,
+    shipcabinid integer NOT NULL,
+    smokingpreferenceid smallint NOT NULL,
+    smokingpreferencecode character varying(32) NOT NULL,
+    diningseatingtypeid smallint NOT NULL,
+    diningseatingcode character varying(32) NOT NULL,
+    diningtablesizeid smallint NOT NULL,
+    diningtablesizecode character varying(32) NOT NULL,
+    cruisegroupid integer NOT NULL,
+    cruiseinventorycontractid integer NOT NULL,
+    cruiseaffinitygroupid integer NOT NULL,
+    cruiselinerateoptioncodetxtlogid integer NOT NULL,
+    residencyregionid integer NOT NULL,
+    cruiselinerateoptionlogid integer NOT NULL
+);
+
+
+--
+-- TOC entry 196 (class 1259 OID 24749)
+-- Name: bookingitemcruiseexternalcatalog; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemcruiseexternalcatalog (
+    bookingitemid integer NOT NULL,
+    shipcabincategorycode character varying(32),
+    shipcabincategorydesc character varying(255),
+    shipcabincategorytypeid smallint,
+    shipcabincategorycodeupgrade character varying(32),
+    shipcabincategoryupgradedesc character varying(255),
+    shipcabincategorytypeidupgrade smallint,
+    portregionidembark integer,
+    portregioniddisembark integer,
+    cruiseitinerarytypeid smallint,
+    cruiseitineraryregionid integer
+);
+
+
+--
+-- TOC entry 197 (class 1259 OID 24757)
+-- Name: bookingitemcruisetraveler; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemcruisetraveler (
+    bookingid integer NOT NULL,
+    bookingtravelerseqnbr smallint NOT NULL,
+    bookingitemid integer NOT NULL,
+    transportationcitycode character(3) NOT NULL,
+    transportationequipmenttypeid smallint NOT NULL,
+    cruiselineprevioustravelercodetypeid smallint NOT NULL,
+    cruiselineprevioustravelercode character varying(32) NOT NULL,
+    travelprotectionplanid integer,
+    travelprotectionplancode character varying(32) NOT NULL,
+    protectionplanpricelogid integer
+);
+
+
+--
+-- TOC entry 198 (class 1259 OID 24762)
+-- Name: bookingitemcruisetravelercruiselinesku; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemcruisetravelercruiselinesku (
+    bookingid integer NOT NULL,
+    bookingtravelerseqnbr smallint NOT NULL,
+    bookingitemid integer NOT NULL,
+    cruiselineskuseqnbr smallint NOT NULL,
+    cruiselineskuid integer NOT NULL,
+    cruiselineskucode character varying(32) NOT NULL,
+    cruiselineskudetailcode character varying(32) NOT NULL,
+    cruiselineskucnt smallint,
+    cruiselineskudate timestamp without time zone,
+    cruiselineskulogid integer NOT NULL,
+    cruiselineskudesc character varying(100) NOT NULL
+);
+
+
+--
+-- TOC entry 199 (class 1259 OID 24768)
+-- Name: bookingitemdocument; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemdocument (
+    bookingitemid integer NOT NULL,
+    bookingitemdocumentseqnbr smallint NOT NULL,
+    bookingitemdocumentseqnbrnext smallint,
+    partyroletypeiddocumentsource smallint NOT NULL,
+    documentprocessingstateid smallint NOT NULL,
+    documentreceiveddate timestamp without time zone,
+    documentreferencenbr character varying(50) NOT NULL,
+    documentdesc character varying(255) NOT NULL,
+    documentprocessingtxt character varying(255) NOT NULL,
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL,
+    updatedate timestamp without time zone,
+    updatetuid integer NOT NULL
+);
+
+
+--
+-- TOC entry 200 (class 1259 OID 24776)
+-- Name: bookingitemhold; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemhold (
+    bookingitemid integer NOT NULL,
+    bookingitemholdtypeid smallint NOT NULL,
+    bookingitemholdstatusid smallint NOT NULL,
+    bookingitemholdexpirationdate timestamp without time zone NOT NULL,
+    updatedate timestamp without time zone NOT NULL
+);
+
+
+--
+-- TOC entry 201 (class 1259 OID 24781)
+-- Name: bookingitemholdlog; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemholdlog (
+    bookingitemid integer NOT NULL,
+    bookingitemholdtypeid smallint NOT NULL,
+    bookingitemholdexpirationdate timestamp without time zone NOT NULL,
+    createdate timestamp without time zone NOT NULL
+);
+
+
+--
+-- TOC entry 202 (class 1259 OID 24786)
+-- Name: bookingiteminsurance; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingiteminsurance (
+    bookingitemid integer NOT NULL,
+    insurancetypeid smallint NOT NULL,
+    airportcodefrom character(3) NOT NULL,
+    airportcodeto character(3) NOT NULL,
+    insurancepolicynbr character varying(30) NOT NULL,
+    startoftripdate timestamp without time zone NOT NULL,
+    endoftripdate timestamp without time zone NOT NULL,
+    originregionid integer NOT NULL,
+    destinationregionid integer NOT NULL,
+    insuranceid integer,
+    startoftripdategmtoffset smallint,
+    endoftripdategmtoffset smallint,
+    canceltypeid smallint,
+    cancelreasonid smallint,
+    cancelinsurancepolicynbr character varying(30),
+    cancelexpressionname character varying(255)
+);
+
+
+--
+-- TOC entry 203 (class 1259 OID 24791)
+-- Name: bookingitemlodging; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemlodging (
+    bookingitemid integer NOT NULL,
+    skugroupid integer NOT NULL,
+    infantcnt smallint,
+    childcnt smallint,
+    adultcnt smallint,
+    seniorcnt smallint,
+    personageyearcntlst bytea NOT NULL,
+    bedtypeid smallint NOT NULL,
+    smokingpreferenceid smallint NOT NULL,
+    hotelrateplanmask integer NOT NULL,
+    hotelproducttypeid integer NOT NULL,
+    offeringskugroupid integer,
+    timezoneid smallint NOT NULL,
+    cancelpenaltyminutecnt integer NOT NULL,
+    bookingitemidoriginallodging integer,
+    r14bool boolean NOT NULL,
+    standalonecostamt double precision,
+    standalonepriceamt double precision,
+    standalonecurrencycodecost character(3),
+    standalonecurrencycodeprice character(3),
+    partnerpricingtypeid smallint NOT NULL,
+    brandid integer,
+    ratingsystemid smallint,
+    ratingsystemnbr smallint
+);
+
+
+--
+-- TOC entry 204 (class 1259 OID 24801)
+-- Name: bookingitemlodgingcancelpenalty; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemlodgingcancelpenalty (
+    bookingitemid integer NOT NULL,
+    cancelpenaltyhourcnt integer NOT NULL,
+    cancelpenaltylogid integer NOT NULL,
+    currencycodecost character(3),
+    cancelpenaltycostrate numeric(5,4),
+    cancelpenaltycostdurationcnt integer,
+    cancelpenaltycostamt double precision,
+    currencycodeprice character(3),
+    cancelpenaltypricerate numeric(5,4),
+    cancelpenaltypricedurationcnt integer,
+    cancelpenaltypriceamt double precision
+);
+
+
+--
+-- TOC entry 205 (class 1259 OID 24806)
+-- Name: bookingitemlodgingcomparison; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemlodgingcomparison (
+    bookingitemid integer NOT NULL,
+    hotelratecomparisontypeid smallint NOT NULL,
+    currencycode character(3) NOT NULL,
+    totalbaseamtprice double precision NOT NULL,
+    totaltaxamtprice double precision NOT NULL,
+    descriptiontxt character varying(255) NOT NULL,
+    packagecomparisonprice double precision
+);
+
+
+--
+-- TOC entry 206 (class 1259 OID 24811)
+-- Name: bookingitemlodginginventory; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemlodginginventory (
+    bookingitemid integer NOT NULL,
+    bookingiteminventoryseqnbr smallint NOT NULL,
+    roomtypeid integer NOT NULL,
+    roomtypeinventorydate timestamp without time zone NOT NULL,
+    roomtypecodesupplier character varying(50) NOT NULL,
+    refundablebool boolean,
+    rateplanid integer NOT NULL,
+    rateplancodesupplier character varying(50) NOT NULL,
+    roomtypeinventoryoverridetypeid smallint NOT NULL,
+    roomtypeinventorysellstateid smallint,
+    rateplanlevel integer,
+    rateplanamenitymask integer,
+    rateplanamenitysectiontypeid integer,
+    rateplancostpricetypeid smallint,
+    doacostpricebool boolean,
+    loscostpricebool boolean
+);
+
+
+--
+-- TOC entry 207 (class 1259 OID 24817)
+-- Name: bookingitemlodgingraterule; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemlodgingraterule (
+    bookingitemid integer NOT NULL,
+    rateruleid integer NOT NULL,
+    raterulelogid integer NOT NULL
+);
+
+
+--
+-- TOC entry 208 (class 1259 OID 24822)
+-- Name: bookingitemmerchandising; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemmerchandising (
+    bookingitemid integer NOT NULL,
+    merchandisingflagid integer NOT NULL,
+    merchandisingseqnbr smallint NOT NULL,
+    merchandisingflaglogid integer NOT NULL,
+    partyroletypeidfulfillment smallint NOT NULL,
+    bookingfulfillmentstateid smallint NOT NULL,
+    updatetuid integer NOT NULL,
+    updatedate timestamp without time zone NOT NULL
+);
+
+
+--
+-- TOC entry 209 (class 1259 OID 24827)
+-- Name: bookingitemnotification; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemnotification (
+    bookingitemid integer NOT NULL,
+    notificationid integer NOT NULL,
+    bookingnotificationtypeid smallint NOT NULL,
+    notificationdate timestamp without time zone NOT NULL,
+    travelproductid integer NOT NULL,
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL
+);
+
+
+--
+-- TOC entry 210 (class 1259 OID 24834)
+-- Name: bookingitemsucc; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemsucc (
+    bookingitemid integer NOT NULL,
+    succstateid smallint NOT NULL,
+    conversationid uuid,
+    sharedcreditcardbool boolean,
+    creditcarddbid smallint,
+    creditcardid integer,
+    updatedate timestamp without time zone NOT NULL,
+    updatetuid integer NOT NULL,
+    createdate timestamp without time zone NOT NULL,
+    succactionid smallint NOT NULL
+);
+
+
+--
+-- TOC entry 211 (class 1259 OID 24840)
+-- Name: bookingitemsuccerrorlog; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemsuccerrorlog (
+    bookingitemid integer NOT NULL,
+    bookingitemsuccerrorlogseqnbr integer NOT NULL,
+    succactionid smallint NOT NULL,
+    errorcode integer NOT NULL,
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL
+);
+
+
+--
+-- TOC entry 213 (class 1259 OID 24847)
+-- Name: bookingitemsucclog; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemsucclog (
+    bookingitemid integer NOT NULL,
+    bookingitemsucclogseqnbr integer NOT NULL,
+    succstateid smallint NOT NULL,
+    conversationid uuid,
+    sharedcreditcardbool boolean,
+    creditcarddbid smallint,
+    creditcardid integer,
+    succactionid smallint NOT NULL,
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL
+);
+
+
+--
+-- TOC entry 212 (class 1259 OID 24845)
+-- Name: bookingitemsucclog_bookingitemsucclogseqnbr_seq; Type: SEQUENCE; Schema: dbo; Owner: reconsandbox
+--
+
+CREATE SEQUENCE bookingitemsucclog_bookingitemsucclogseqnbr_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 3354 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: bookingitemsucclog_bookingitemsucclogseqnbr_seq; Type: SEQUENCE OWNED BY; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER SEQUENCE bookingitemsucclog_bookingitemsucclogseqnbr_seq OWNED BY bookingitemsucclog.bookingitemsucclogseqnbr;
+
+
+--
+-- TOC entry 214 (class 1259 OID 24853)
+-- Name: bookingitemtravelshops; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemtravelshops (
+    bookingitemid integer NOT NULL,
+    skuid integer NOT NULL,
+    vouchersecuritycode character varying(30),
+    vendorbranchid integer NOT NULL,
+    placeid integer NOT NULL,
+    vouchertickettypeid1 smallint NOT NULL,
+    vouchertickettypecnt1 smallint NOT NULL,
+    vouchertickettypeid2 smallint,
+    vouchertickettypecnt2 smallint,
+    vouchertickettypeid3 smallint,
+    vouchertickettypecnt3 smallint
+);
+
+
+--
+-- TOC entry 215 (class 1259 OID 24859)
+-- Name: bookingitemwaiver; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitemwaiver (
+    bookingitemid integer NOT NULL,
+    waivercoverageexpirationperiod smallint NOT NULL,
+    waiverexerciseddate timestamp without time zone,
+    purchasetypeid smallint NOT NULL,
+    bookingsystemdatabasetypeid smallint NOT NULL,
+    bookingidreference integer,
+    bookingitemidoriginalreference integer,
+    bookingrecordsystemid smallint NOT NULL,
+    bookingrecordsystemreferencecode character varying(30) NOT NULL
+);
+
+
+--
+-- TOC entry 217 (class 1259 OID 24866)
+-- Name: bookingitineraryair; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingitineraryair (
+    bookingitineraryairid integer NOT NULL,
+    bookingid integer NOT NULL,
+    internationalbool boolean NOT NULL,
+    tripgeometryid smallint NOT NULL,
+    currencycode character(3) NOT NULL,
+    fareamtpublished double precision,
+    fareamtlowestlogical double precision,
+    fareamtlowestinpolicy double precision,
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL,
+    updatedate timestamp without time zone,
+    updatetuid integer NOT NULL,
+    fareamtlowestlogicalcomparison double precision,
+    fareamtlowestcomparison double precision,
+    airportcodecomparisonfrom character(3),
+    airportcodecomparisonto character(3),
+    gdshemisphereid smallint,
+    gdsjourneyid smallint,
+    packagecomparisonprice double precision,
+    gdspnrremark character varying(500),
+    feesegmentationruleid integer,
+    feeabacustreatmentgroupvalue integer
+);
+
+
+--
+-- TOC entry 216 (class 1259 OID 24864)
+-- Name: bookingitineraryair_bookingitineraryairid_seq; Type: SEQUENCE; Schema: dbo; Owner: reconsandbox
+--
+
+CREATE SEQUENCE bookingitineraryair_bookingitineraryairid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 3355 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: bookingitineraryair_bookingitineraryairid_seq; Type: SEQUENCE OWNED BY; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER SEQUENCE bookingitineraryair_bookingitineraryairid_seq OWNED BY bookingitineraryair.bookingitineraryairid;
+
+
+--
+-- TOC entry 218 (class 1259 OID 24877)
+-- Name: bookinglock; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookinglock (
+    bookingid integer NOT NULL,
+    bookingstateid smallint NOT NULL,
+    bookingnewbool boolean NOT NULL,
+    travelproductid integer NOT NULL,
+    transactionguid bytea NOT NULL,
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL
+);
+
+
+--
+-- TOC entry 219 (class 1259 OID 24885)
+-- Name: bookinglodgingopaque; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookinglodgingopaque (
+    bookingid integer NOT NULL,
+    hwrefnumber character varying(32) NOT NULL,
+    hwresultid character varying(56),
+    createdate timestamp without time zone NOT NULL,
+    hotelconfirmationnumber character varying(50) NOT NULL
+);
+
+
+--
+-- TOC entry 220 (class 1259 OID 24890)
+-- Name: bookingtext; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingtext (
+    bookingid integer NOT NULL,
+    bookingtextseqnbr smallint NOT NULL,
+    bookingitemid integer,
+    bookingtexttypeid smallint NOT NULL,
+    bookingtxt character varying(7950) NOT NULL,
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL,
+    updatedate timestamp without time zone,
+    updatetuid integer NOT NULL
+);
+
+
+--
+-- TOC entry 221 (class 1259 OID 24900)
+-- Name: bookingtraveler; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingtraveler (
+    bookingid integer NOT NULL,
+    bookingtravelerseqnbr smallint NOT NULL,
+    activebool boolean NOT NULL,
+    tuid integer,
+    firstname character varying(60) NOT NULL,
+    middlename character varying(60) NOT NULL,
+    lastname character varying(60) NOT NULL,
+    personaltitleid smallint NOT NULL,
+    personageyearcnt smallint,
+    personagetypeid smallint NOT NULL,
+    useremailadr character varying(132) NOT NULL,
+    phonecountryprefixnbrday character varying(10) NOT NULL,
+    phoneareacodenbrday character varying(10) NOT NULL,
+    phonelocalnbrday character varying(15) NOT NULL,
+    phoneextensionnbrday character varying(15) NOT NULL,
+    phonecountryprefixnbrevening character varying(10) NOT NULL,
+    phoneareacodenbrevening character varying(10) NOT NULL,
+    phonelocalnbrevening character varying(15) NOT NULL,
+    phoneextensionnbrevening character varying(15) NOT NULL,
+    phonecountryprefixnbrfax character varying(10) NOT NULL,
+    phoneareacodenbrfax character varying(10) NOT NULL,
+    phonelocalnbrfax character varying(15) NOT NULL,
+    phoneextensionnbrfax character varying(15) NOT NULL,
+    addressline1 character varying(40) NOT NULL,
+    addressline2 character varying(40) NOT NULL,
+    addressline3 character varying(40) NOT NULL,
+    addressline4 character varying(40) NOT NULL,
+    addressline5 character varying(40) NOT NULL,
+    cityname character varying(40) NOT NULL,
+    regionname character varying(40) NOT NULL,
+    postalcode character varying(20) NOT NULL,
+    countrycode character(3) NOT NULL,
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL,
+    updatedate timestamp without time zone,
+    updatetuid integer NOT NULL,
+    birthdate timestamp without time zone,
+    genderid smallint,
+    nationalitycountrycode character(3)
+);
+
+
+--
+-- TOC entry 222 (class 1259 OID 24910)
+-- Name: bookingtravelerloyaltyplan; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingtravelerloyaltyplan (
+    bookingid integer NOT NULL,
+    bookingtravelerseqnbr smallint NOT NULL,
+    bookingtravelerloyaltyplanseqnbr smallint NOT NULL,
+    lineofbusinessid smallint NOT NULL,
+    loyaltyplanvendorcode character varying(10) NOT NULL,
+    loyaltyplanmembershipnbr character varying(60) NOT NULL,
+    notifybool boolean NOT NULL,
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL,
+    updatedate timestamp without time zone,
+    updatetuid integer NOT NULL
+);
+
+
+--
+-- TOC entry 223 (class 1259 OID 24917)
+-- Name: bookingtravelerunicode; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE bookingtravelerunicode (
+    bookingid integer NOT NULL,
+    bookingtravelerseqnbr smallint NOT NULL,
+    firstname character varying(60) NOT NULL,
+    middlename character varying(60) NOT NULL,
+    lastname character varying(60) NOT NULL,
+    addressline1 character varying(80) NOT NULL,
+    addressline2 character varying(80) NOT NULL,
+    addressline3 character varying(80) NOT NULL,
+    addressline4 character varying(80) NOT NULL,
+    addressline5 character varying(80) NOT NULL,
+    cityname character varying(40) NOT NULL,
+    regionname character varying(40) NOT NULL,
+    createdate timestamp without time zone NOT NULL,
+    createtuid integer NOT NULL,
+    updatedate timestamp without time zone,
+    updatetuid integer NOT NULL
+);
+
+
+--
+-- TOC entry 224 (class 1259 OID 24926)
+-- Name: cancelreason; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE cancelreason (
+    cancelreasonid smallint NOT NULL,
+    cancelreasonname character varying(60) NOT NULL,
+    cancelreasondescription character varying(255),
+    updatedate timestamp without time zone NOT NULL,
+    updatedby character varying(32) NOT NULL
+);
+
+
+--
+-- TOC entry 225 (class 1259 OID 24932)
+-- Name: canceltype; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE canceltype (
+    canceltypeid smallint NOT NULL,
+    canceltypename character varying(60) NOT NULL,
+    canceltypedescription character varying(255),
+    updatedate timestamp without time zone NOT NULL,
+    updatedby character varying(32) NOT NULL
+);
+
+
+--
+-- TOC entry 226 (class 1259 OID 24938)
+-- Name: dbbuildobject; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE dbbuildobject (
+    relativepath character varying(200) NOT NULL,
+    filename character varying(200) NOT NULL,
+    filedate timestamp without time zone NOT NULL,
+    majorversion character varying(10) NOT NULL,
+    minorversion character varying(10) NOT NULL,
+    buildcount character varying(10) NOT NULL,
+    objectid integer,
+    objecttype character(2),
+    objectname character varying(200),
+    objectcrdate timestamp without time zone
+);
+
+
+--
+-- TOC entry 227 (class 1259 OID 24946)
+-- Name: dbo_bookingiteminsurance_bak; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE dbo_bookingiteminsurance_bak (
+    bookingitemid integer NOT NULL,
+    insurancetypeid smallint NOT NULL,
+    airportcodefrom character(3) NOT NULL,
+    airportcodeto character(3) NOT NULL,
+    insurancepolicynbr character varying(30) NOT NULL,
+    startoftripdate timestamp without time zone NOT NULL,
+    endoftripdate timestamp without time zone NOT NULL,
+    originregionid integer NOT NULL,
+    destinationregionid integer NOT NULL,
+    insuranceid integer,
+    startoftripdategmtoffset smallint,
+    endoftripdategmtoffset smallint,
+    canceltypeid integer,
+    cancelreasonid integer
+);
+
+
+--
+-- TOC entry 228 (class 1259 OID 24949)
+-- Name: dssexportobject; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE dssexportobject (
+    objectname character varying(128) NOT NULL,
+    bcpobjectname character varying(128) NOT NULL,
+    isactive character(1) NOT NULL,
+    collisionremovalflag character(1) NOT NULL,
+    bcpoptions character varying(300) NOT NULL,
+    criteriastart timestamp without time zone,
+    criteriaend timestamp without time zone,
+    processstart timestamp without time zone,
+    processend timestamp without time zone,
+    rowsprocessed integer,
+    lastcriteriastart timestamp without time zone,
+    lastexecutestatus character varying(10)
+);
+
+
+--
+-- TOC entry 230 (class 1259 OID 24959)
+-- Name: insurancebooking; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE insurancebooking (
+    insurancebookingid bigint NOT NULL,
+    insurancerecordlocatorid bigint NOT NULL,
+    bookingid integer NOT NULL,
+    travelproductid integer NOT NULL,
+    orderid bigint,
+    orderoperationcorrelationid bigint,
+    insuranceofferingguid uuid,
+    insurancebookingdata xml,
+    createdate timestamp without time zone NOT NULL,
+    updatedate timestamp without time zone NOT NULL
+);
+
+
+--
+-- TOC entry 229 (class 1259 OID 24957)
+-- Name: insurancebooking_insurancebookingid_seq; Type: SEQUENCE; Schema: dbo; Owner: reconsandbox
+--
+
+CREATE SEQUENCE insurancebooking_insurancebookingid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 3356 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: insurancebooking_insurancebookingid_seq; Type: SEQUENCE OWNED BY; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER SEQUENCE insurancebooking_insurancebookingid_seq OWNED BY insurancebooking.insurancebookingid;
+
+
+--
+-- TOC entry 232 (class 1259 OID 24970)
+-- Name: insurancerecordlocator; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE insurancerecordlocator (
+    insurancerecordlocator bigint NOT NULL,
+    createdate timestamp without time zone NOT NULL
+);
+
+
+--
+-- TOC entry 231 (class 1259 OID 24968)
+-- Name: insurancerecordlocator_insurancerecordlocator_seq; Type: SEQUENCE; Schema: dbo; Owner: reconsandbox
+--
+
+CREATE SEQUENCE insurancerecordlocator_insurancerecordlocator_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 3357 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: insurancerecordlocator_insurancerecordlocator_seq; Type: SEQUENCE OWNED BY; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER SEQUENCE insurancerecordlocator_insurancerecordlocator_seq OWNED BY insurancerecordlocator.insurancerecordlocator;
+
+
+--
+-- TOC entry 233 (class 1259 OID 24976)
+-- Name: omsfeestaging; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE omsfeestaging (
+    bookingid integer NOT NULL,
+    transactionguid uuid NOT NULL,
+    bookingfeechangedata xml NOT NULL,
+    createdate timestamp without time zone NOT NULL
+);
+
+
+--
+-- TOC entry 234 (class 1259 OID 24986)
+-- Name: replicationpingtest; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE replicationpingtest (
+    replicationpingtestcode character varying(4) NOT NULL,
+    updatedate timestamp without time zone NOT NULL
+);
+
+
+--
+-- TOC entry 236 (class 1259 OID 24993)
+-- Name: sysdiagrams; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE sysdiagrams (
+    name character varying(128) NOT NULL,
+    principal_id integer NOT NULL,
+    diagram_id integer NOT NULL,
+    version integer,
+    definition bytea
+);
+
+
+--
+-- TOC entry 235 (class 1259 OID 24991)
+-- Name: sysdiagrams_diagram_id_seq; Type: SEQUENCE; Schema: dbo; Owner: reconsandbox
+--
+
+CREATE SEQUENCE sysdiagrams_diagram_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 3358 (class 0 OID 0)
+-- Dependencies: 235
+-- Name: sysdiagrams_diagram_id_seq; Type: SEQUENCE OWNED BY; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER SEQUENCE sysdiagrams_diagram_id_seq OWNED BY sysdiagrams.diagram_id;
+
+
+--
+-- TOC entry 238 (class 1259 OID 25005)
+-- Name: systemsqlagentjob; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE systemsqlagentjob (
+    systemsqlagentjobid integer NOT NULL,
+    jobname character varying(128) NOT NULL,
+    jobdescription character varying(256) NOT NULL,
+    commandtype smallint NOT NULL,
+    commandname character varying(128) NOT NULL,
+    commandarg character varying(1000) NOT NULL,
+    schedulename character varying(128) NOT NULL,
+    schedulestarttime integer NOT NULL
+);
+
+
+--
+-- TOC entry 237 (class 1259 OID 25003)
+-- Name: systemsqlagentjob_systemsqlagentjobid_seq; Type: SEQUENCE; Schema: dbo; Owner: reconsandbox
+--
+
+CREATE SEQUENCE systemsqlagentjob_systemsqlagentjobid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 3359 (class 0 OID 0)
+-- Dependencies: 237
+-- Name: systemsqlagentjob_systemsqlagentjobid_seq; Type: SEQUENCE OWNED BY; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER SEQUENCE systemsqlagentjob_systemsqlagentjobid_seq OWNED BY systemsqlagentjob.systemsqlagentjobid;
+
+
+--
+-- TOC entry 239 (class 1259 OID 25014)
+-- Name: systemvalue; Type: TABLE; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE TABLE systemvalue (
+    systemvaluename character varying(60) NOT NULL,
+    systemvaluevalue character varying(255) NOT NULL
+);
+
+
+--
+-- TOC entry 3015 (class 2604 OID 24597)
+-- Name: bookingid; Type: DEFAULT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY booking ALTER COLUMN bookingid SET DEFAULT nextval('booking_bookingid_seq'::regclass);
+
+
+--
+-- TOC entry 3016 (class 2604 OID 24657)
+-- Name: bookingitemid; Type: DEFAULT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitem ALTER COLUMN bookingitemid SET DEFAULT nextval('bookingitem_bookingitemid_seq'::regclass);
+
+
+--
+-- TOC entry 3017 (class 2604 OID 24696)
+-- Name: bookingitembookingtravelerlogid; Type: DEFAULT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitembookingtravelerlog ALTER COLUMN bookingitembookingtravelerlogid SET DEFAULT nextval('bookingitembookingtravelerlog_bookingitembookingtravelerlog_seq'::regclass);
+
+
+--
+-- TOC entry 3018 (class 2604 OID 24850)
+-- Name: bookingitemsucclogseqnbr; Type: DEFAULT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemsucclog ALTER COLUMN bookingitemsucclogseqnbr SET DEFAULT nextval('bookingitemsucclog_bookingitemsucclogseqnbr_seq'::regclass);
+
+
+--
+-- TOC entry 3019 (class 2604 OID 24869)
+-- Name: bookingitineraryairid; Type: DEFAULT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitineraryair ALTER COLUMN bookingitineraryairid SET DEFAULT nextval('bookingitineraryair_bookingitineraryairid_seq'::regclass);
+
+
+--
+-- TOC entry 3020 (class 2604 OID 24962)
+-- Name: insurancebookingid; Type: DEFAULT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY insurancebooking ALTER COLUMN insurancebookingid SET DEFAULT nextval('insurancebooking_insurancebookingid_seq'::regclass);
+
+
+--
+-- TOC entry 3021 (class 2604 OID 24973)
+-- Name: insurancerecordlocator; Type: DEFAULT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY insurancerecordlocator ALTER COLUMN insurancerecordlocator SET DEFAULT nextval('insurancerecordlocator_insurancerecordlocator_seq'::regclass);
+
+
+--
+-- TOC entry 3022 (class 2604 OID 24996)
+-- Name: diagram_id; Type: DEFAULT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY sysdiagrams ALTER COLUMN diagram_id SET DEFAULT nextval('sysdiagrams_diagram_id_seq'::regclass);
+
+
+--
+-- TOC entry 3023 (class 2604 OID 25008)
+-- Name: systemsqlagentjobid; Type: DEFAULT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY systemsqlagentjob ALTER COLUMN systemsqlagentjobid SET DEFAULT nextval('systemsqlagentjob_systemsqlagentjobid_seq'::regclass);
+
+
+--
+-- TOC entry 3025 (class 2606 OID 24591)
+-- Name: pk__airbookingservicefeecharged; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY __airbookingservicefeecharged
+    ADD CONSTRAINT pk__airbookingservicefeecharged PRIMARY KEY (bookingid, bookingitemid);
+
+
+--
+-- TOC entry 3178 (class 2606 OID 25001)
+-- Name: pk__sysdiagr__c2b05b6119ffd4fc; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY sysdiagrams
+    ADD CONSTRAINT pk__sysdiagr__c2b05b6119ffd4fc PRIMARY KEY (diagram_id);
+
+
+--
+-- TOC entry 3174 (class 2606 OID 24983)
+-- Name: pk_omsfeestaging; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY omsfeestaging
+    ADD CONSTRAINT pk_omsfeestaging PRIMARY KEY (bookingid);
+
+
+--
+-- TOC entry 3033 (class 2606 OID 24614)
+-- Name: pkbookingaffiliatesource; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingaffiliatesource
+    ADD CONSTRAINT pkbookingaffiliatesource PRIMARY KEY (bookingid);
+
+
+--
+-- TOC entry 3074 (class 2606 OID 24709)
+-- Name: pkbookingitemcar; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemcar
+    ADD CONSTRAINT pkbookingitemcar PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3078 (class 2606 OID 24722)
+-- Name: pkbookingitemcarinventory; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemcarinventory
+    ADD CONSTRAINT pkbookingitemcarinventory PRIMARY KEY (bookingitemid, bookingiteminventoryseqnbr);
+
+
+--
+-- TOC entry 3089 (class 2606 OID 24747)
+-- Name: pkbookingitemcruise; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemcruise
+    ADD CONSTRAINT pkbookingitemcruise PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3091 (class 2606 OID 24756)
+-- Name: pkbookingitemcruiseexternalcatalog; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemcruiseexternalcatalog
+    ADD CONSTRAINT pkbookingitemcruiseexternalcatalog PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3111 (class 2606 OID 24810)
+-- Name: pkbookingitemlodgingcomparison; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemlodgingcomparison
+    ADD CONSTRAINT pkbookingitemlodgingcomparison PRIMARY KEY (bookingitemid, hotelratecomparisontypeid);
+
+
+--
+-- TOC entry 3124 (class 2606 OID 24838)
+-- Name: pkbookingitemsucc; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemsucc
+    ADD CONSTRAINT pkbookingitemsucc PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3127 (class 2606 OID 24844)
+-- Name: pkbookingitemsuccerrorlog; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemsuccerrorlog
+    ADD CONSTRAINT pkbookingitemsuccerrorlog PRIMARY KEY (bookingitemid, bookingitemsuccerrorlogseqnbr);
+
+
+--
+-- TOC entry 3129 (class 2606 OID 24852)
+-- Name: pkbookingitemsucclog; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemsucclog
+    ADD CONSTRAINT pkbookingitemsucclog PRIMARY KEY (bookingitemid, bookingitemsucclogseqnbr);
+
+
+--
+-- TOC entry 3134 (class 2606 OID 24863)
+-- Name: pkbookingitemwaiver; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemwaiver
+    ADD CONSTRAINT pkbookingitemwaiver PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3159 (class 2606 OID 24930)
+-- Name: pkcancelreason; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY cancelreason
+    ADD CONSTRAINT pkcancelreason PRIMARY KEY (cancelreasonid);
+
+
+--
+-- TOC entry 3162 (class 2606 OID 24936)
+-- Name: pkcanceltype; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY canceltype
+    ADD CONSTRAINT pkcanceltype PRIMARY KEY (canceltypeid);
+
+
+--
+-- TOC entry 3168 (class 2606 OID 24967)
+-- Name: pkinsurancebookingid; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY insurancebooking
+    ADD CONSTRAINT pkinsurancebookingid PRIMARY KEY (insurancebookingid);
+
+
+--
+-- TOC entry 3170 (class 2606 OID 24975)
+-- Name: pkinsurancerecordlocator; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY insurancerecordlocator
+    ADD CONSTRAINT pkinsurancerecordlocator PRIMARY KEY (insurancerecordlocator);
+
+
+--
+-- TOC entry 3031 (class 2606 OID 24602)
+-- Name: xpkbooking; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY booking
+    ADD CONSTRAINT xpkbooking PRIMARY KEY (bookingid);
+
+
+--
+-- TOC entry 3037 (class 2606 OID 24622)
+-- Name: xpkbookingamount; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingamount
+    ADD CONSTRAINT xpkbookingamount PRIMARY KEY (bookingid, bookingamountseqnbr);
+
+
+--
+-- TOC entry 3041 (class 2606 OID 24632)
+-- Name: xpkbookingattributeextension; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingattributeextension
+    ADD CONSTRAINT xpkbookingattributeextension PRIMARY KEY (bookingid, bookingattributeextseqnbr);
+
+
+--
+-- TOC entry 3044 (class 2606 OID 24642)
+-- Name: xpkbookingauditevent; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingauditevent
+    ADD CONSTRAINT xpkbookingauditevent PRIMARY KEY (bookingauditeventid, bookingauditeventversionnbr);
+
+
+--
+-- TOC entry 3056 (class 2606 OID 24662)
+-- Name: xpkbookingitem; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitem
+    ADD CONSTRAINT xpkbookingitem PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3059 (class 2606 OID 24675)
+-- Name: xpkbookingitemair; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemair
+    ADD CONSTRAINT xpkbookingitemair PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3062 (class 2606 OID 24681)
+-- Name: xpkbookingitemairinventory; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemairinventory
+    ADD CONSTRAINT xpkbookingitemairinventory PRIMARY KEY (bookingitemid, bookingiteminventoryseqnbr);
+
+
+--
+-- TOC entry 3067 (class 2606 OID 24687)
+-- Name: xpkbookingitembookingtraveler; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitembookingtraveler
+    ADD CONSTRAINT xpkbookingitembookingtraveler PRIMARY KEY (bookingid, bookingtravelerseqnbr, bookingitemid);
+
+
+--
+-- TOC entry 3072 (class 2606 OID 24698)
+-- Name: xpkbookingitembookingtravelerlog; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitembookingtravelerlog
+    ADD CONSTRAINT xpkbookingitembookingtravelerlog PRIMARY KEY (bookingitembookingtravelerlogid);
+
+
+--
+-- TOC entry 3076 (class 2606 OID 24717)
+-- Name: xpkbookingitemcaragency; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemcaragency
+    ADD CONSTRAINT xpkbookingitemcaragency PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3080 (class 2606 OID 24727)
+-- Name: xpkbookingitemcarmerchant; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemcarmerchant
+    ADD CONSTRAINT xpkbookingitemcarmerchant PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3082 (class 2606 OID 24732)
+-- Name: xpkbookingitemcarmerchantcancelpenalty; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemcarmerchantcancelpenalty
+    ADD CONSTRAINT xpkbookingitemcarmerchantcancelpenalty PRIMARY KEY (bookingitemid, cancelpenaltyhourcnt);
+
+
+--
+-- TOC entry 3084 (class 2606 OID 24737)
+-- Name: xpkbookingitemcarmerchantinventory; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemcarmerchantinventory
+    ADD CONSTRAINT xpkbookingitemcarmerchantinventory PRIMARY KEY (bookingitemid, bookingiteminventoryseqnbr);
+
+
+--
+-- TOC entry 3086 (class 2606 OID 24742)
+-- Name: xpkbookingitemcorporate; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemcorporate
+    ADD CONSTRAINT xpkbookingitemcorporate PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3093 (class 2606 OID 24761)
+-- Name: xpkbookingitemcruisetraveler; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemcruisetraveler
+    ADD CONSTRAINT xpkbookingitemcruisetraveler PRIMARY KEY (bookingitemid, bookingid, bookingtravelerseqnbr);
+
+
+--
+-- TOC entry 3095 (class 2606 OID 24767)
+-- Name: xpkbookingitemcruisetravelercruiselinesku; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemcruisetravelercruiselinesku
+    ADD CONSTRAINT xpkbookingitemcruisetravelercruiselinesku PRIMARY KEY (bookingid, bookingtravelerseqnbr, bookingitemid, cruiselineskuseqnbr);
+
+
+--
+-- TOC entry 3097 (class 2606 OID 24775)
+-- Name: xpkbookingitemdocument; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemdocument
+    ADD CONSTRAINT xpkbookingitemdocument PRIMARY KEY (bookingitemid, bookingitemdocumentseqnbr);
+
+
+--
+-- TOC entry 3099 (class 2606 OID 24780)
+-- Name: xpkbookingitemhold; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemhold
+    ADD CONSTRAINT xpkbookingitemhold PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3101 (class 2606 OID 24785)
+-- Name: xpkbookingitemholdlog; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemholdlog
+    ADD CONSTRAINT xpkbookingitemholdlog PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3103 (class 2606 OID 24790)
+-- Name: xpkbookingiteminsurance; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingiteminsurance
+    ADD CONSTRAINT xpkbookingiteminsurance PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3107 (class 2606 OID 24798)
+-- Name: xpkbookingitemlodging; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemlodging
+    ADD CONSTRAINT xpkbookingitemlodging PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3109 (class 2606 OID 24805)
+-- Name: xpkbookingitemlodgingcancelpenalty; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemlodgingcancelpenalty
+    ADD CONSTRAINT xpkbookingitemlodgingcancelpenalty PRIMARY KEY (bookingitemid, cancelpenaltyhourcnt);
+
+
+--
+-- TOC entry 3114 (class 2606 OID 24815)
+-- Name: xpkbookingitemlodginginventory; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemlodginginventory
+    ADD CONSTRAINT xpkbookingitemlodginginventory PRIMARY KEY (bookingitemid, bookingiteminventoryseqnbr);
+
+
+--
+-- TOC entry 3116 (class 2606 OID 24821)
+-- Name: xpkbookingitemlodgingraterule; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemlodgingraterule
+    ADD CONSTRAINT xpkbookingitemlodgingraterule PRIMARY KEY (bookingitemid, rateruleid);
+
+
+--
+-- TOC entry 3118 (class 2606 OID 24826)
+-- Name: xpkbookingitemmerchandising; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemmerchandising
+    ADD CONSTRAINT xpkbookingitemmerchandising PRIMARY KEY (bookingitemid, merchandisingflagid, merchandisingseqnbr);
+
+
+--
+-- TOC entry 3122 (class 2606 OID 24831)
+-- Name: xpkbookingitemnotification; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemnotification
+    ADD CONSTRAINT xpkbookingitemnotification PRIMARY KEY (bookingitemid, notificationid);
+
+
+--
+-- TOC entry 3132 (class 2606 OID 24857)
+-- Name: xpkbookingitemtravelshops; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitemtravelshops
+    ADD CONSTRAINT xpkbookingitemtravelshops PRIMARY KEY (bookingitemid);
+
+
+--
+-- TOC entry 3138 (class 2606 OID 24874)
+-- Name: xpkbookingitineraryair; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingitineraryair
+    ADD CONSTRAINT xpkbookingitineraryair PRIMARY KEY (bookingitineraryairid);
+
+
+--
+-- TOC entry 3140 (class 2606 OID 24884)
+-- Name: xpkbookinglock; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookinglock
+    ADD CONSTRAINT xpkbookinglock PRIMARY KEY (bookingid);
+
+
+--
+-- TOC entry 3142 (class 2606 OID 24889)
+-- Name: xpkbookinglodgingopaque; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookinglodgingopaque
+    ADD CONSTRAINT xpkbookinglodgingopaque PRIMARY KEY (bookingid, hwrefnumber);
+
+
+--
+-- TOC entry 3146 (class 2606 OID 24897)
+-- Name: xpkbookingtext; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingtext
+    ADD CONSTRAINT xpkbookingtext PRIMARY KEY (bookingid, bookingtextseqnbr);
+
+
+--
+-- TOC entry 3150 (class 2606 OID 24907)
+-- Name: xpkbookingtraveler; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingtraveler
+    ADD CONSTRAINT xpkbookingtraveler PRIMARY KEY (bookingid, bookingtravelerseqnbr);
+
+
+--
+-- TOC entry 3153 (class 2606 OID 24914)
+-- Name: xpkbookingtravelerloyaltyplan; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingtravelerloyaltyplan
+    ADD CONSTRAINT xpkbookingtravelerloyaltyplan PRIMARY KEY (bookingid, bookingtravelerseqnbr, bookingtravelerloyaltyplanseqnbr);
+
+
+--
+-- TOC entry 3156 (class 2606 OID 24924)
+-- Name: xpkbookingtravelerunicode; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY bookingtravelerunicode
+    ADD CONSTRAINT xpkbookingtravelerunicode PRIMARY KEY (bookingid, bookingtravelerseqnbr);
+
+
+--
+-- TOC entry 3164 (class 2606 OID 24945)
+-- Name: xpkdbbuildobject; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY dbbuildobject
+    ADD CONSTRAINT xpkdbbuildobject PRIMARY KEY (relativepath, filename);
+
+
+--
+-- TOC entry 3166 (class 2606 OID 24956)
+-- Name: xpkdssexportobject; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY dssexportobject
+    ADD CONSTRAINT xpkdssexportobject PRIMARY KEY (objectname);
+
+
+--
+-- TOC entry 3176 (class 2606 OID 24990)
+-- Name: xpkreplicationpingtest; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY replicationpingtest
+    ADD CONSTRAINT xpkreplicationpingtest PRIMARY KEY (replicationpingtestcode);
+
+
+--
+-- TOC entry 3181 (class 2606 OID 25013)
+-- Name: xpksystemsqlagentjob; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY systemsqlagentjob
+    ADD CONSTRAINT xpksystemsqlagentjob PRIMARY KEY (systemsqlagentjobid);
+
+
+--
+-- TOC entry 3183 (class 2606 OID 25018)
+-- Name: xpksystemvalue; Type: CONSTRAINT; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+ALTER TABLE ONLY systemvalue
+    ADD CONSTRAINT xpksystemvalue PRIMARY KEY (systemvaluename);
+
+
+--
+-- TOC entry 3157 (class 1259 OID 24931)
+-- Name: akcancelreason; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE UNIQUE INDEX akcancelreason ON cancelreason USING btree (cancelreasonname);
+
+
+--
+-- TOC entry 3160 (class 1259 OID 24937)
+-- Name: akcanceltype; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE UNIQUE INDEX akcanceltype ON canceltype USING btree (canceltypename);
+
+
+--
+-- TOC entry 3047 (class 1259 OID 24669)
+-- Name: ie7bookingitem; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX ie7bookingitem ON bookingitem USING btree (accountingvendorid, createdate, usedatebegin, usedateend);
+
+
+--
+-- TOC entry 3171 (class 1259 OID 24984)
+-- Name: ix1_omsfeestaging; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX ix1_omsfeestaging ON omsfeestaging USING btree (transactionguid);
+
+
+--
+-- TOC entry 3172 (class 1259 OID 24985)
+-- Name: ix2_omsfeestaging2; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX ix2_omsfeestaging2 ON omsfeestaging USING btree (createdate);
+
+
+--
+-- TOC entry 3038 (class 1259 OID 24634)
+-- Name: ixbookingattributeextension_bookingitemid; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX ixbookingattributeextension_bookingitemid ON bookingattributeextension USING btree (bookingitemid);
+
+
+--
+-- TOC entry 3048 (class 1259 OID 24668)
+-- Name: ixbookingitem_supplierbookingconfirmationcode; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX ixbookingitem_supplierbookingconfirmationcode ON bookingitem USING btree (supplierbookingconfirmationcode);
+
+
+--
+-- TOC entry 3087 (class 1259 OID 24748)
+-- Name: ixbookingitemcruise_cruiseinventorycontractid_cruiseaffinitygro; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX ixbookingitemcruise_cruiseinventorycontractid_cruiseaffinitygro ON bookingitemcruise USING btree (cruiseinventorycontractid, cruiseaffinitygroupid);
+
+
+--
+-- TOC entry 3179 (class 1259 OID 25002)
+-- Name: uk_principal_name; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE UNIQUE INDEX uk_principal_name ON sysdiagrams USING btree (principal_id, name);
+
+
+--
+-- TOC entry 3042 (class 1259 OID 24643)
+-- Name: xak1bookingauditevent; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE UNIQUE INDEX xak1bookingauditevent ON bookingauditevent USING btree (bookingauditeventname);
+
+
+--
+-- TOC entry 3112 (class 1259 OID 24816)
+-- Name: xak1bookingitemlodginginventory; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE UNIQUE INDEX xak1bookingitemlodginginventory ON bookingitemlodginginventory USING btree (roomtypeid, roomtypeinventorydate, bookingitemid);
+
+
+--
+-- TOC entry 3026 (class 1259 OID 24603)
+-- Name: xie1booking; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1booking ON booking USING btree (updatedate);
+
+
+--
+-- TOC entry 3034 (class 1259 OID 24623)
+-- Name: xie1bookingamount; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingamount ON bookingamount USING btree (createdate);
+
+
+--
+-- TOC entry 3039 (class 1259 OID 24633)
+-- Name: xie1bookingattributeextension; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingattributeextension ON bookingattributeextension USING btree (updatedate);
+
+
+--
+-- TOC entry 3045 (class 1259 OID 24651)
+-- Name: xie1bookingauditlog; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingauditlog ON bookingauditlog USING btree (auditdate, bookingauditeventid);
+
+
+--
+-- TOC entry 3049 (class 1259 OID 24663)
+-- Name: xie1bookingitem; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingitem ON bookingitem USING btree (bookingid, bookingitemid);
+
+
+--
+-- TOC entry 3057 (class 1259 OID 24676)
+-- Name: xie1bookingitemair; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingitemair ON bookingitemair USING btree (bookingitineraryairid);
+
+
+--
+-- TOC entry 3060 (class 1259 OID 24682)
+-- Name: xie1bookingitemairinventory; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingitemairinventory ON bookingitemairinventory USING btree (bookingiteminventoryseqnbrpricing);
+
+
+--
+-- TOC entry 3063 (class 1259 OID 24688)
+-- Name: xie1bookingitembookingtraveler; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingitembookingtraveler ON bookingitembookingtraveler USING btree (createdate);
+
+
+--
+-- TOC entry 3068 (class 1259 OID 24699)
+-- Name: xie1bookingitembookingtravelerlog; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingitembookingtravelerlog ON bookingitembookingtravelerlog USING btree (bookingid);
+
+
+--
+-- TOC entry 3104 (class 1259 OID 24799)
+-- Name: xie1bookingitemlodging; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingitemlodging ON bookingitemlodging USING btree (skugroupid, bookingitemid);
+
+
+--
+-- TOC entry 3119 (class 1259 OID 24832)
+-- Name: xie1bookingitemnotification; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingitemnotification ON bookingitemnotification USING btree (createdate);
+
+
+--
+-- TOC entry 3125 (class 1259 OID 24839)
+-- Name: xie1bookingitemsucc; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingitemsucc ON bookingitemsucc USING btree (succstateid);
+
+
+--
+-- TOC entry 3130 (class 1259 OID 24858)
+-- Name: xie1bookingitemtravelshops; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingitemtravelshops ON bookingitemtravelshops USING btree (vendorbranchid, bookingitemid);
+
+
+--
+-- TOC entry 3135 (class 1259 OID 24875)
+-- Name: xie1bookingitineraryair; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingitineraryair ON bookingitineraryair USING btree (bookingid);
+
+
+--
+-- TOC entry 3143 (class 1259 OID 24898)
+-- Name: xie1bookingtext; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingtext ON bookingtext USING btree (updatedate);
+
+
+--
+-- TOC entry 3147 (class 1259 OID 24908)
+-- Name: xie1bookingtraveler; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingtraveler ON bookingtraveler USING btree (updatedate);
+
+
+--
+-- TOC entry 3151 (class 1259 OID 24915)
+-- Name: xie1bookingtravelerloyaltyplan; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingtravelerloyaltyplan ON bookingtravelerloyaltyplan USING btree (updatedate);
+
+
+--
+-- TOC entry 3154 (class 1259 OID 24925)
+-- Name: xie1bookingtravelerunicode; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie1bookingtravelerunicode ON bookingtravelerunicode USING btree (updatedate);
+
+
+--
+-- TOC entry 3027 (class 1259 OID 24604)
+-- Name: xie2booking; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie2booking ON booking USING btree (bookingenddate, bookingid);
+
+
+--
+-- TOC entry 3035 (class 1259 OID 24624)
+-- Name: xie2bookingamount; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie2bookingamount ON bookingamount USING btree (bookingitemid, bookingiteminventoryseqnbr);
+
+
+--
+-- TOC entry 3046 (class 1259 OID 24650)
+-- Name: xie2bookingauditlog; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie2bookingauditlog ON bookingauditlog USING btree (bookingid, bookingitemid);
+
+
+--
+-- TOC entry 3050 (class 1259 OID 24664)
+-- Name: xie2bookingitem; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie2bookingitem ON bookingitem USING btree (bookingitemidoriginal, bookingid, bookingitemid);
+
+
+--
+-- TOC entry 3064 (class 1259 OID 24689)
+-- Name: xie2bookingitembookingtraveler; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie2bookingitembookingtraveler ON bookingitembookingtraveler USING btree (bookingitembookingtravelerlogid);
+
+
+--
+-- TOC entry 3069 (class 1259 OID 24700)
+-- Name: xie2bookingitembookingtravelerlog; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie2bookingitembookingtravelerlog ON bookingitembookingtravelerlog USING btree (createdate);
+
+
+--
+-- TOC entry 3105 (class 1259 OID 24800)
+-- Name: xie2bookingitemlodging; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie2bookingitemlodging ON bookingitemlodging USING btree (bookingitemidoriginallodging);
+
+
+--
+-- TOC entry 3120 (class 1259 OID 24833)
+-- Name: xie2bookingitemnotification; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie2bookingitemnotification ON bookingitemnotification USING btree (notificationid, bookingitemid);
+
+
+--
+-- TOC entry 3136 (class 1259 OID 24876)
+-- Name: xie2bookingitineraryair; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie2bookingitineraryair ON bookingitineraryair USING btree (updatedate);
+
+
+--
+-- TOC entry 3144 (class 1259 OID 24899)
+-- Name: xie2bookingtext; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie2bookingtext ON bookingtext USING btree (bookingitemid, bookingtexttypeid);
+
+
+--
+-- TOC entry 3148 (class 1259 OID 24909)
+-- Name: xie2bookingtraveler; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie2bookingtraveler ON bookingtraveler USING btree (bookingid, lastname, firstname);
+
+
+--
+-- TOC entry 3028 (class 1259 OID 24605)
+-- Name: xie3booking; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie3booking ON booking USING btree (trl, travelproductid);
+
+
+--
+-- TOC entry 3051 (class 1259 OID 24665)
+-- Name: xie3bookingitem; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie3bookingitem ON bookingitem USING btree (updatedate);
+
+
+--
+-- TOC entry 3065 (class 1259 OID 24690)
+-- Name: xie3bookingitembookingtraveler; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie3bookingitembookingtraveler ON bookingitembookingtraveler USING btree (bookingitemid, primarytravelerbool);
+
+
+--
+-- TOC entry 3070 (class 1259 OID 24701)
+-- Name: xie3bookingitembookingtravelerlog; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie3bookingitembookingtravelerlog ON bookingitembookingtravelerlog USING btree (bookingitembookingtravelerlogidprior);
+
+
+--
+-- TOC entry 3029 (class 1259 OID 24606)
+-- Name: xie4booking; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie4booking ON booking USING btree (tuid, travelproductid);
+
+
+--
+-- TOC entry 3052 (class 1259 OID 24666)
+-- Name: xie4bookingitem; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie4bookingitem ON bookingitem USING btree (bookingitemid, usedatebegin, usedateend, bookingitemstateid, bookingitemstateidpending, supplierbookingconfirmationcode, createdate, updatedate);
+
+
+--
+-- TOC entry 3053 (class 1259 OID 24667)
+-- Name: xie5bookingitem; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie5bookingitem ON bookingitem USING btree (bookingitemidprior);
+
+
+--
+-- TOC entry 3054 (class 1259 OID 24670)
+-- Name: xie7bookingitem; Type: INDEX; Schema: dbo; Owner: reconsandbox; Tablespace: 
+--
+
+CREATE INDEX xie7bookingitem ON bookingitem USING btree (bookdate);
+
+
+--
+-- TOC entry 3237 (class 2606 OID 25284)
+-- Name: fk_omsfeestaging_booking; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY omsfeestaging
+    ADD CONSTRAINT fk_omsfeestaging_booking FOREIGN KEY (bookingid) REFERENCES booking(bookingid);
+
+
+--
+-- TOC entry 3184 (class 2606 OID 25019)
+-- Name: fkbookingaffiliatesource_booking; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingaffiliatesource
+    ADD CONSTRAINT fkbookingaffiliatesource_booking FOREIGN KEY (bookingid) REFERENCES booking(bookingid);
+
+
+--
+-- TOC entry 3185 (class 2606 OID 25024)
+-- Name: fkbookingamount_booking; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingamount
+    ADD CONSTRAINT fkbookingamount_booking FOREIGN KEY (bookingid) REFERENCES booking(bookingid);
+
+
+--
+-- TOC entry 3186 (class 2606 OID 25029)
+-- Name: fkbookingamount_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingamount
+    ADD CONSTRAINT fkbookingamount_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3187 (class 2606 OID 25034)
+-- Name: fkbookingattributeextension_booking; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingattributeextension
+    ADD CONSTRAINT fkbookingattributeextension_booking FOREIGN KEY (bookingid) REFERENCES booking(bookingid);
+
+
+--
+-- TOC entry 3188 (class 2606 OID 25039)
+-- Name: fkbookingattributeextension_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingattributeextension
+    ADD CONSTRAINT fkbookingattributeextension_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3189 (class 2606 OID 25044)
+-- Name: fkbookingattributeextension_bookingtraveler; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingattributeextension
+    ADD CONSTRAINT fkbookingattributeextension_bookingtraveler FOREIGN KEY (bookingid, bookingtravelerseqnbr) REFERENCES bookingtraveler(bookingid, bookingtravelerseqnbr);
+
+
+--
+-- TOC entry 3190 (class 2606 OID 25049)
+-- Name: fkbookingitem_booking; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitem
+    ADD CONSTRAINT fkbookingitem_booking FOREIGN KEY (bookingid) REFERENCES booking(bookingid);
+
+
+--
+-- TOC entry 3191 (class 2606 OID 25054)
+-- Name: fkbookingitem_bookingitem_original; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitem
+    ADD CONSTRAINT fkbookingitem_bookingitem_original FOREIGN KEY (bookingitemidoriginal) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3192 (class 2606 OID 25059)
+-- Name: fkbookingitem_bookingitem_prior; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitem
+    ADD CONSTRAINT fkbookingitem_bookingitem_prior FOREIGN KEY (bookingitemidprior) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3193 (class 2606 OID 25064)
+-- Name: fkbookingitemair_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemair
+    ADD CONSTRAINT fkbookingitemair_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3194 (class 2606 OID 25069)
+-- Name: fkbookingitemair_bookingitemairinventory; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemair
+    ADD CONSTRAINT fkbookingitemair_bookingitemairinventory FOREIGN KEY (bookingitineraryairid) REFERENCES bookingitineraryair(bookingitineraryairid);
+
+
+--
+-- TOC entry 3195 (class 2606 OID 25074)
+-- Name: fkbookingitemairinventory_bookingitemair; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemairinventory
+    ADD CONSTRAINT fkbookingitemairinventory_bookingitemair FOREIGN KEY (bookingitemid) REFERENCES bookingitemair(bookingitemid);
+
+
+--
+-- TOC entry 3196 (class 2606 OID 25079)
+-- Name: fkbookingitemairinventory_bookingitemairinventory_pricing; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemairinventory
+    ADD CONSTRAINT fkbookingitemairinventory_bookingitemairinventory_pricing FOREIGN KEY (bookingitemid, bookingiteminventoryseqnbrpricing) REFERENCES bookingitemairinventory(bookingitemid, bookingiteminventoryseqnbr);
+
+
+--
+-- TOC entry 3197 (class 2606 OID 25084)
+-- Name: fkbookingitembookingtraveler_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitembookingtraveler
+    ADD CONSTRAINT fkbookingitembookingtraveler_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3198 (class 2606 OID 25089)
+-- Name: fkbookingitembookingtraveler_bookingitembookingtravelerlog; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitembookingtraveler
+    ADD CONSTRAINT fkbookingitembookingtraveler_bookingitembookingtravelerlog FOREIGN KEY (bookingitembookingtravelerlogid) REFERENCES bookingitembookingtravelerlog(bookingitembookingtravelerlogid);
+
+
+--
+-- TOC entry 3199 (class 2606 OID 25094)
+-- Name: fkbookingitembookingtraveler_bookingtraveler; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitembookingtraveler
+    ADD CONSTRAINT fkbookingitembookingtraveler_bookingtraveler FOREIGN KEY (bookingid, bookingtravelerseqnbr) REFERENCES bookingtraveler(bookingid, bookingtravelerseqnbr);
+
+
+--
+-- TOC entry 3200 (class 2606 OID 25099)
+-- Name: fkbookingitembookingtravelerlog_bookingitembookingtravelerlog_p; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitembookingtravelerlog
+    ADD CONSTRAINT fkbookingitembookingtravelerlog_bookingitembookingtravelerlog_p FOREIGN KEY (bookingitembookingtravelerlogidprior) REFERENCES bookingitembookingtravelerlog(bookingitembookingtravelerlogid);
+
+
+--
+-- TOC entry 3201 (class 2606 OID 25104)
+-- Name: fkbookingitemcar_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemcar
+    ADD CONSTRAINT fkbookingitemcar_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3202 (class 2606 OID 25109)
+-- Name: fkbookingitemcaragency_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemcaragency
+    ADD CONSTRAINT fkbookingitemcaragency_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3203 (class 2606 OID 25114)
+-- Name: fkbookingitemcarinventory_bookingitemcar; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemcarinventory
+    ADD CONSTRAINT fkbookingitemcarinventory_bookingitemcar FOREIGN KEY (bookingitemid) REFERENCES bookingitemcar(bookingitemid);
+
+
+--
+-- TOC entry 3204 (class 2606 OID 25119)
+-- Name: fkbookingitemcarmerchant_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemcarmerchant
+    ADD CONSTRAINT fkbookingitemcarmerchant_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3205 (class 2606 OID 25124)
+-- Name: fkbookingitemcarmerchantcancelpenalty_bookingitemcarmerchant; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemcarmerchantcancelpenalty
+    ADD CONSTRAINT fkbookingitemcarmerchantcancelpenalty_bookingitemcarmerchant FOREIGN KEY (bookingitemid) REFERENCES bookingitemcarmerchant(bookingitemid);
+
+
+--
+-- TOC entry 3206 (class 2606 OID 25129)
+-- Name: fkbookingitemcarmerchantinventory_bookingitemcarmerchant; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemcarmerchantinventory
+    ADD CONSTRAINT fkbookingitemcarmerchantinventory_bookingitemcarmerchant FOREIGN KEY (bookingitemid) REFERENCES bookingitemcarmerchant(bookingitemid);
+
+
+--
+-- TOC entry 3207 (class 2606 OID 25134)
+-- Name: fkbookingitemcruise_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemcruise
+    ADD CONSTRAINT fkbookingitemcruise_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3208 (class 2606 OID 25139)
+-- Name: fkbookingitemcruiseexternalcatalog_bookingitemcruise; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemcruiseexternalcatalog
+    ADD CONSTRAINT fkbookingitemcruiseexternalcatalog_bookingitemcruise FOREIGN KEY (bookingitemid) REFERENCES bookingitemcruise(bookingitemid);
+
+
+--
+-- TOC entry 3209 (class 2606 OID 25144)
+-- Name: fkbookingitemcruisetraveler_bookingitembookingtraveler; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemcruisetraveler
+    ADD CONSTRAINT fkbookingitemcruisetraveler_bookingitembookingtraveler FOREIGN KEY (bookingid, bookingtravelerseqnbr, bookingitemid) REFERENCES bookingitembookingtraveler(bookingid, bookingtravelerseqnbr, bookingitemid);
+
+
+--
+-- TOC entry 3210 (class 2606 OID 25149)
+-- Name: fkbookingitemcruisetraveler_bookingitemcruise; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemcruisetraveler
+    ADD CONSTRAINT fkbookingitemcruisetraveler_bookingitemcruise FOREIGN KEY (bookingitemid) REFERENCES bookingitemcruise(bookingitemid);
+
+
+--
+-- TOC entry 3211 (class 2606 OID 25154)
+-- Name: fkbookingitemcruisetravelercruiselinesku_bookingitemcruisetrave; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemcruisetravelercruiselinesku
+    ADD CONSTRAINT fkbookingitemcruisetravelercruiselinesku_bookingitemcruisetrave FOREIGN KEY (bookingitemid, bookingid, bookingtravelerseqnbr) REFERENCES bookingitemcruisetraveler(bookingitemid, bookingid, bookingtravelerseqnbr);
+
+
+--
+-- TOC entry 3212 (class 2606 OID 25159)
+-- Name: fkbookingitemdocument_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemdocument
+    ADD CONSTRAINT fkbookingitemdocument_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3213 (class 2606 OID 25164)
+-- Name: fkbookingitemdocument_bookingitemdocument_next; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemdocument
+    ADD CONSTRAINT fkbookingitemdocument_bookingitemdocument_next FOREIGN KEY (bookingitemid, bookingitemdocumentseqnbrnext) REFERENCES bookingitemdocument(bookingitemid, bookingitemdocumentseqnbr);
+
+
+--
+-- TOC entry 3214 (class 2606 OID 25169)
+-- Name: fkbookingitemhold_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemhold
+    ADD CONSTRAINT fkbookingitemhold_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3215 (class 2606 OID 25174)
+-- Name: fkbookingitemholdlog_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemholdlog
+    ADD CONSTRAINT fkbookingitemholdlog_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3216 (class 2606 OID 25179)
+-- Name: fkbookingiteminsurance_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingiteminsurance
+    ADD CONSTRAINT fkbookingiteminsurance_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3217 (class 2606 OID 25184)
+-- Name: fkbookingiteminsurance_cancelreason; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingiteminsurance
+    ADD CONSTRAINT fkbookingiteminsurance_cancelreason FOREIGN KEY (cancelreasonid) REFERENCES cancelreason(cancelreasonid);
+
+
+--
+-- TOC entry 3218 (class 2606 OID 25189)
+-- Name: fkbookingiteminsurance_canceltype; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingiteminsurance
+    ADD CONSTRAINT fkbookingiteminsurance_canceltype FOREIGN KEY (canceltypeid) REFERENCES canceltype(canceltypeid);
+
+
+--
+-- TOC entry 3219 (class 2606 OID 25194)
+-- Name: fkbookingitemlodging_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemlodging
+    ADD CONSTRAINT fkbookingitemlodging_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3220 (class 2606 OID 25199)
+-- Name: fkbookingitemlodgingcancelpenalty_bookingitemlodging; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemlodgingcancelpenalty
+    ADD CONSTRAINT fkbookingitemlodgingcancelpenalty_bookingitemlodging FOREIGN KEY (bookingitemid) REFERENCES bookingitemlodging(bookingitemid);
+
+
+--
+-- TOC entry 3221 (class 2606 OID 25204)
+-- Name: fkbookingitemlodgingcomparison_bookingitemlodging; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemlodgingcomparison
+    ADD CONSTRAINT fkbookingitemlodgingcomparison_bookingitemlodging FOREIGN KEY (bookingitemid) REFERENCES bookingitemlodging(bookingitemid);
+
+
+--
+-- TOC entry 3222 (class 2606 OID 25209)
+-- Name: fkbookingitemlodginginventory_bookingitemlodging; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemlodginginventory
+    ADD CONSTRAINT fkbookingitemlodginginventory_bookingitemlodging FOREIGN KEY (bookingitemid) REFERENCES bookingitemlodging(bookingitemid);
+
+
+--
+-- TOC entry 3223 (class 2606 OID 25214)
+-- Name: fkbookingitemlodgingraterule_bookingitemlodging; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemlodgingraterule
+    ADD CONSTRAINT fkbookingitemlodgingraterule_bookingitemlodging FOREIGN KEY (bookingitemid) REFERENCES bookingitemlodging(bookingitemid);
+
+
+--
+-- TOC entry 3224 (class 2606 OID 25219)
+-- Name: fkbookingitemmerchandising_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemmerchandising
+    ADD CONSTRAINT fkbookingitemmerchandising_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3225 (class 2606 OID 25224)
+-- Name: fkbookingitemnotification_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemnotification
+    ADD CONSTRAINT fkbookingitemnotification_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3226 (class 2606 OID 25229)
+-- Name: fkbookingitemsucc_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemsucc
+    ADD CONSTRAINT fkbookingitemsucc_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3227 (class 2606 OID 25234)
+-- Name: fkbookingitemtravelshops_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemtravelshops
+    ADD CONSTRAINT fkbookingitemtravelshops_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3228 (class 2606 OID 25239)
+-- Name: fkbookingitemwaiver_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitemwaiver
+    ADD CONSTRAINT fkbookingitemwaiver_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3229 (class 2606 OID 25244)
+-- Name: fkbookingitineraryair_booking; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingitineraryair
+    ADD CONSTRAINT fkbookingitineraryair_booking FOREIGN KEY (bookingid) REFERENCES booking(bookingid);
+
+
+--
+-- TOC entry 3230 (class 2606 OID 25249)
+-- Name: fkbookinglock_booking; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookinglock
+    ADD CONSTRAINT fkbookinglock_booking FOREIGN KEY (bookingid) REFERENCES booking(bookingid);
+
+
+--
+-- TOC entry 3231 (class 2606 OID 25254)
+-- Name: fkbookinglodgingopaque_booking; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookinglodgingopaque
+    ADD CONSTRAINT fkbookinglodgingopaque_booking FOREIGN KEY (bookingid) REFERENCES booking(bookingid);
+
+
+--
+-- TOC entry 3232 (class 2606 OID 25259)
+-- Name: fkbookingtext_booking; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingtext
+    ADD CONSTRAINT fkbookingtext_booking FOREIGN KEY (bookingid) REFERENCES booking(bookingid);
+
+
+--
+-- TOC entry 3233 (class 2606 OID 25264)
+-- Name: fkbookingtext_bookingitem; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingtext
+    ADD CONSTRAINT fkbookingtext_bookingitem FOREIGN KEY (bookingitemid) REFERENCES bookingitem(bookingitemid);
+
+
+--
+-- TOC entry 3234 (class 2606 OID 25269)
+-- Name: fkbookingtraveler_booking; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingtraveler
+    ADD CONSTRAINT fkbookingtraveler_booking FOREIGN KEY (bookingid) REFERENCES booking(bookingid);
+
+
+--
+-- TOC entry 3235 (class 2606 OID 25274)
+-- Name: fkbookingtravelerloyaltyplan_bookingtraveler; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingtravelerloyaltyplan
+    ADD CONSTRAINT fkbookingtravelerloyaltyplan_bookingtraveler FOREIGN KEY (bookingid, bookingtravelerseqnbr) REFERENCES bookingtraveler(bookingid, bookingtravelerseqnbr);
+
+
+--
+-- TOC entry 3236 (class 2606 OID 25279)
+-- Name: fkbookingtravelerunicode_bookingtraveler; Type: FK CONSTRAINT; Schema: dbo; Owner: reconsandbox
+--
+
+ALTER TABLE ONLY bookingtravelerunicode
+    ADD CONSTRAINT fkbookingtravelerunicode_bookingtraveler FOREIGN KEY (bookingid, bookingtravelerseqnbr) REFERENCES bookingtraveler(bookingid, bookingtravelerseqnbr);
+
+
+-- Completed on 2015-09-17 14:23:20
+
+--
+-- PostgreSQL database dump complete
+--
+

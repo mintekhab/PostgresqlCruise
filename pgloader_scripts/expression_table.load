@@ -1,0 +1,36 @@
+LOAD CSV
+     FROM '~/expression_local.csv' WITH ENCODING UTF-16LE
+          HAVING FIELDS
+          (
+             expressionid
+            ,internalexpressionname
+            ,expressiondescription
+            ,expressionxml
+            ,vendorid
+            ,scheduleid
+            ,isactive
+            ,createddate   [date format 'YYYY-MM-DD HH24:MI:SS.US']
+            ,createdby
+            ,lastupdateddate  [date format 'YYYY-MM-DD HH24:MI:SS.US']
+            ,lastupdatedby
+          )
+     INTO postgresql://reconsandbox:recon123@recon-sand-box.cmguqnu4wehw.us-west-2.rds.amazonaws.com:5432/insurancepoc?ins.expression
+          TARGET COLUMNS
+          (
+             expressionid
+            ,internalexpressionname
+            ,expressiondescription
+            ,expressionxml
+            ,vendorid
+            ,scheduleid
+            ,isactive
+            ,createddate
+            ,createdby
+            ,lastupdateddate
+            ,lastupdatedby
+          )
+     WITH 
+          fields not enclosed 
+         ,fields terminated by ','
+         ,drop indexes
+ SET work_mem to '32 MB', maintenance_work_mem to '64 MB';
