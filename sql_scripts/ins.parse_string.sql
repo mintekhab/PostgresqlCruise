@@ -8,7 +8,7 @@ DECLARE
 BEGIN
       IF  ($1 is not null )
       AND ($2 is not null ) THEN 
-        regex := 'E''\\'||$2||'''';
+        regex := 'E''\\'||$2||''''; 
         sql := 'SELECT val FROM regexp_split_to_table( '|| quote_literal($1) || ',' ||  regex || ') as val' ;
         raise notice 'sql query : %', sql;
         return query execute sql;
